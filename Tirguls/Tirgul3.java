@@ -1,3 +1,5 @@
+package Tirguls;
+
 import java.util.Arrays;
 //plot a graph of the function y = x^2
 
@@ -5,6 +7,9 @@ public class Tirgul3 {
     public static void mulTenRef(int[] arr) {
         arr[0] *= 10;
 
+    }
+    public static void mulTenRef2(Integer num) {
+        num *= 10;
     }
     public static void mulTenVal(int num) {
         num *= 10;
@@ -60,7 +65,12 @@ public class Tirgul3 {
         mulTenVal2(num2);
         System.out.println(num2);
 //        this function is not working because what is changing is the pointer to the object in the function, not the object itself
+        // make Integer unmutable
 
+
+        mulTenRef2(num2);
+
+        System.out.println(num2);
 //        arrays:
         int arr2[] = new int[5];
         int[] arr3 = new int[5];
