@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class TelephoneBook {
-//    This Class represents a telephone book, which is a linked list of TelephoneNodes.
+    //    This Class represents a telephone book, which is a linked list of TelephoneNodes.
 //    Each TelephoneNode represents a contact in the telephone book.
     private TelephoneNode head;
     private TelephoneNode tail;
@@ -30,7 +30,30 @@ public class TelephoneBook {
     }
 
     public void deleteContact(String name) {
-//        write here your code
+        // this function get name of contact and delete it from the telephone book
+        boolean found = false;
+        TelephoneNode curr = this.head;
+        TelephoneNode prev = null;
+        for (int i = 0; i < this.size; i++) {
+            if (curr.getName().equals(name)) {
+                found = true;
+                this.size--;
+                if (curr == this.head) {
+                    this.head = curr.getNext();
+                } else if (curr == this.tail) {
+                    this.tail = prev;
+                    this.tail.setNext(null);
+                } else {
+                    prev.setNext(curr.getNext());
+                }
+                break;
+            }
+            prev = curr;
+            curr = curr.getNext();
+        }
+        if (!found) {
+            System.out.println("Contact " + name + " not found");
+        }
     }
 
     public void printContacts() {
@@ -44,8 +67,21 @@ public class TelephoneBook {
     }
 
     public TelephoneNode findContact(String name) {
-//        write here your code
-        return null;
+//      This function get name of contact, print it and return the node of the contact
+//      if the name exist multiple times, the function will print all the contacts and return the last one
+        TelephoneNode curr = this.head;
+        TelephoneNode contact = null;
+        for (int i = 0; i < this.size; i++) {
+            if (curr.getName().equals(name)) {
+                contact = curr;
+                System.out.println("Contact " + i + ": Name: " + curr.getName() + ", Phone Number: " + curr.getNumber());
+            }
+            curr = curr.getNext();
+        }
+        if (contact == null) {
+            System.out.println("Contact " + name + " not found");
+        }
+        return contact;
     }
 
     public void sortContactsByName() {
@@ -61,7 +97,18 @@ public class TelephoneBook {
     }
 
     public void reverse() {
-//        write here your code
+//this function reverse the order of the list
+        TelephoneNode curr = this.head;
+        TelephoneNode prev = null;
+        TelephoneNode next = null;
+        while (curr != null) {
+            next = curr.getNext();
+            curr.setNext(prev);
+            prev = curr;
+            curr = next;
+        }
+        this.tail = this.head;
+        this.head = prev;
     }
 
     public void saveToFile(String fileName) {
@@ -86,7 +133,7 @@ public class TelephoneBook {
         System.out.println("11. Exit");
     }
 
-    public static void menu(TelephoneBook telephoneBook, Scanner scanner){
+    public static void menu(TelephoneBook telephoneBook, Scanner scanner) {
         int choice;
         String name;
         String number;
@@ -114,11 +161,6 @@ public class TelephoneBook {
                     System.out.println("Enter name:");
                     name = scanner.next();
                     node = telephoneBook.findContact(name);
-                    if (node != null) {
-                        System.out.println(node.getName() + " " + node.getNumber());
-                    } else {
-                        System.out.println("Contact not found");
-                    }
                     break;
                 case 5:
                     telephoneBook.sortContactsByName();
@@ -150,6 +192,7 @@ public class TelephoneBook {
         } while (choice != 11);
     }
 
+
     public static void main(String[] args) {
         TelephoneBook telephoneBook = new TelephoneBook();
 //        take input from file
@@ -164,8 +207,7 @@ public class TelephoneBook {
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
-        }
-        else {
+        } else {
             Scanner scanner = new Scanner(System.in);
             menu(telephoneBook, scanner);
         }
