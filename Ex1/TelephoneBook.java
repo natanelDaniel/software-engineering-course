@@ -2,6 +2,7 @@ package Ex1;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class TelephoneBook {
@@ -46,6 +47,8 @@ public class TelephoneBook {
                 } else {
                     prev.setNext(curr.getNext());
                 }
+//                call garbage collector
+                System.gc();
                 break;
             }
             prev = curr;
@@ -93,14 +96,36 @@ public class TelephoneBook {
     }
 
     public void removeDuplicates() {
-//        write here your code
+//        This function remove all the duplicates
+//        lets create dict  - key is the name + number and value is the number of times the key appear
+//        dict in java is HashMap
+        HashMap<String, Integer> dict = new HashMap<>();
+        TelephoneNode curr = this.head;
+        TelephoneNode prev = null;
+        while (curr != null) {
+            String key = curr.getName() + curr.getNumber();
+            if (dict.containsKey(key)) {
+                if (curr == this.tail) {
+                    this.tail = prev;
+                    prev.setNext(null);
+                } else {
+                    prev.setNext(curr.getNext());
+                }
+                this.size--;
+                System.gc();
+            } else {
+                dict.put(key, 1);
+            }
+            prev = curr;
+            curr = curr.getNext();
+        }
     }
 
     public void reverse() {
 //this function reverse the order of the list
         TelephoneNode curr = this.head;
         TelephoneNode prev = null;
-        TelephoneNode next = null;
+        TelephoneNode next;
         while (curr != null) {
             next = curr.getNext();
             curr.setNext(prev);
@@ -198,7 +223,7 @@ public class TelephoneBook {
 //        take input from file
         String test1 = "Ex1\\test1.txt";
 
-        Boolean fromFile = false;
+        Boolean fromFile = true;
 
         if (fromFile) {
             try {
