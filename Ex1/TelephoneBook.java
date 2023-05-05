@@ -2,6 +2,10 @@ package Ex1;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -88,13 +92,38 @@ public class TelephoneBook {
     }
 
     public void sortContactsByName() {
-//        write here your code
+//      this function sort the contacts linked list by name in Lexicographic order
+        TelephoneNode curr = this.head;
+        TelephoneNode[] arr = new TelephoneNode[this.size];
+        for (int i = 0; i < this.size; i++) {
+            arr[i] = curr;
+            curr = curr.getNext();
+        }
+        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getName));
+        this.head = arr[0];
+        this.tail = arr[this.size - 1];
+        for (int i = 0; i < this.size - 1; i++) {
+            arr[i].setNext(arr[i + 1]);
+        }
+        this.tail.setNext(null);
     }
 
     public void sortContactsByNumber() {
-//        write here your code
+//        this function sort the contacts by their number from the biggest to the smallest
+        TelephoneNode curr = this.head;
+        TelephoneNode[] arr = new TelephoneNode[this.size];
+        for (int i = 0; i < this.size; i++) {
+            arr[i] = curr;
+            curr = curr.getNext();
+        }
+        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getNumber));
+        this.head = arr[0];
+        this.tail = arr[this.size - 1];
+        for (int i = 0; i < this.size - 1; i++) {
+            arr[i].setNext(arr[i + 1]);
+        }
+        this.tail.setNext(null);
     }
-
     public void removeDuplicates() {
 //        This function remove all the duplicates
 //        lets create dict  - key is the name + number and value is the number of times the key appear
@@ -137,7 +166,27 @@ public class TelephoneBook {
     }
 
     public void saveToFile(String fileName) {
-//        write here your code
+//          this function save the phone book to a txt file.
+//          inputs: file name with full path from the user
+        // get the file name from the user
+        if (!fileName.endsWith(".txt")) {
+            fileName += ".txt";
+        }
+        // write the phone book to the file
+        try {
+            FileWriter newFile = new FileWriter(fileName);
+            TelephoneNode curr = this.head;
+            for (int i = 0; i < this.size; i++) {
+                newFile.write(curr.getName() + "," + curr.getNumber() + "\n");
+                curr = curr.getNext();
+            }
+            newFile.close();
+            System.out.println("Successfully written.");
+        }
+        catch (IOException e) {
+            System.out.println("An error has occurred.");
+            e.printStackTrace();
+        }
     }
 
     public void loadFromFile(String fileName) {
