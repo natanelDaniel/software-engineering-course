@@ -1,9 +1,6 @@
 package Ex1;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -174,7 +171,8 @@ public class TelephoneBook {
         }
         // write the phone book to the file
         try {
-            FileWriter newFile = new FileWriter(fileName);
+            File file = new File(fileName);
+            FileWriter newFile = new FileWriter(file);
             TelephoneNode curr = this.head;
             for (int i = 0; i < this.size; i++) {
                 newFile.write(curr.getName() + "," + curr.getNumber() + "\n");
@@ -190,7 +188,19 @@ public class TelephoneBook {
     }
 
     public void loadFromFile(String fileName) {
-//        write here your code
+        //This function loads contacts from a file into the linked list
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line = reader.readLine();
+            while (line != null) {
+                String[] parts = line.split("\\s*[,-]\\s*|[,-]\\s+");
+                addContact(parts[0], parts[1]);
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Error reading contacts from file: " + e.getMessage());
+        }
     }
 
     public static void printMenu() {
@@ -208,62 +218,62 @@ public class TelephoneBook {
     }
 
     public static void menu(TelephoneBook telephoneBook, Scanner scanner) {
-        int choice;
+        String choice;
         String name;
         String number;
         TelephoneNode node;
         do {
             printMenu();
-            choice = scanner.nextInt();
+            choice = scanner.next();
             switch (choice) {
-                case 1:
+                case "1":
                     System.out.println("Enter name:");
                     name = scanner.next();
                     System.out.println("Enter number:");
                     number = scanner.next();
                     telephoneBook.addContact(name, number);
                     break;
-                case 2:
+                case "2":
                     System.out.println("Enter name:");
                     name = scanner.next();
                     telephoneBook.deleteContact(name);
                     break;
-                case 3:
+                case "3":
                     telephoneBook.printContacts();
                     break;
-                case 4:
+                case "4":
                     System.out.println("Enter name:");
                     name = scanner.next();
                     node = telephoneBook.findContact(name);
                     break;
-                case 5:
+                case "5":
                     telephoneBook.sortContactsByName();
                     break;
-                case 6:
+                case "6":
                     telephoneBook.sortContactsByNumber();
                     break;
-                case 7:
+                case "7":
                     telephoneBook.removeDuplicates();
                     break;
-                case 8:
+                case "8":
                     telephoneBook.reverse();
                     break;
-                case 9:
+                case "9":
                     System.out.println("Enter file name:");
                     name = scanner.next();
                     telephoneBook.saveToFile(name);
                     break;
-                case 10:
+                case "10":
                     System.out.println("Enter file name:");
                     name = scanner.next();
                     telephoneBook.loadFromFile(name);
                     break;
-                case 11:
+                case "11":
                     break;
                 default:
                     System.out.println("Invalid choice");
             }
-        } while (choice != 11);
+        } while (choice != "11");
     }
 
 
