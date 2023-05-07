@@ -1,10 +1,7 @@
 package Ex1;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class TelephoneBook {
     //    This Class represents a telephone book, which is a linked list of TelephoneNodes.
@@ -70,22 +67,21 @@ public class TelephoneBook {
         System.out.println("*********************************");
     }
 
-    public TelephoneNode findContact(String name) {
-//      This function get name of contact, print it and return the node of the contact
-//      if the name exist multiple times, the function will print all the contacts and return the last one
+    public ArrayList<TelephoneNode> findContact(String name) {
+//      This function get name of contact, print all the matches to the name and return array-list of the contacts
         TelephoneNode curr = this.head;
-        TelephoneNode contact = null;
+        ArrayList<TelephoneNode> matches = new ArrayList<TelephoneNode>();
         for (int i = 0; i < this.size; i++) {
             if (curr.getName().equals(name)) {
-                contact = curr;
+                matches.add(curr);
                 System.out.println("Contact " + i + ": Name: " + curr.getName() + ", Phone Number: " + curr.getNumber());
             }
             curr = curr.getNext();
         }
-        if (contact == null) {
+        if (matches.isEmpty()) {
             System.out.println("Contact " + name + " not found");
         }
-        return contact;
+        return matches;
     }
 
     public void sortContactsByName() {
@@ -221,7 +217,7 @@ public class TelephoneBook {
         String choice;
         String name;
         String number;
-        TelephoneNode node;
+        ArrayList<TelephoneNode> matches = new ArrayList<TelephoneNode>();
         do {
             printMenu();
             choice = scanner.next();
@@ -244,7 +240,7 @@ public class TelephoneBook {
                 case "4":
                     System.out.println("Enter name:");
                     name = scanner.next();
-                    node = telephoneBook.findContact(name);
+                    matches = telephoneBook.findContact(name);
                     break;
                 case "5":
                     telephoneBook.sortContactsByName();
