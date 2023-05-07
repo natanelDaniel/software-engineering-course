@@ -1,11 +1,13 @@
 package Ex1;
 
-import java.io.*;
-import java.util.Scanner;
-import java.util.Arrays;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class TelephoneBook {
     //    This Class represents a telephone book, which is a linked list of TelephoneNodes.
@@ -49,6 +51,8 @@ public class TelephoneBook {
                 } else {
                     prev.setNext(curr.getNext());
                 }
+//                call garbage collector
+                System.gc();
                 break;
             }
             prev = curr;
@@ -90,13 +94,12 @@ public class TelephoneBook {
     public void sortContactsByName() {
 //      this function sort the contacts linked list by name in Lexicographic order
         TelephoneNode curr = this.head;
-        TelephoneNode next = null;
         TelephoneNode[] arr = new TelephoneNode[this.size];
         for (int i = 0; i < this.size; i++) {
             arr[i] = curr;
             curr = curr.getNext();
         }
-        Arrays.sort(arr, (a, b) -> a.getName().compareTo(b.getName()));
+        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getName));
         this.head = arr[0];
         this.tail = arr[this.size - 1];
         for (int i = 0; i < this.size - 1; i++) {
@@ -108,13 +111,12 @@ public class TelephoneBook {
     public void sortContactsByNumber() {
 //        this function sort the contacts by their number from the biggest to the smallest
         TelephoneNode curr = this.head;
-        TelephoneNode next = null;
         TelephoneNode[] arr = new TelephoneNode[this.size];
         for (int i = 0; i < this.size; i++) {
             arr[i] = curr;
             curr = curr.getNext();
         }
-        Arrays.sort(arr, (a, b) -> b.getNumber().compareTo(a.getNumber()));
+        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getNumber));
         this.head = arr[0];
         this.tail = arr[this.size - 1];
         for (int i = 0; i < this.size - 1; i++) {
@@ -122,28 +124,29 @@ public class TelephoneBook {
         }
         this.tail.setNext(null);
     }
-
     public void removeDuplicates() {
-//this function remove all the duplicates in the list
+//        This function remove all the duplicates
+//        lets create dict  - key is the name + number and value is the number of times the key appear
+//        dict in java is HashMap
+        HashMap<String, Integer> dict = new HashMap<>();
         TelephoneNode curr = this.head;
         TelephoneNode prev = null;
-        TelephoneNode next = null;
-        for (int i = 0; i < this.size; i++) {
-            next = curr.getNext();
-            if (next != null && curr.getName().equals(next.getName())) {
-                this.size--;
-                if (curr == this.head) {
-                    this.head = next;
-                } else if (curr == this.tail) {
+        while (curr != null) {
+            String key = curr.getName() + curr.getNumber();
+            if (dict.containsKey(key)) {
+                if (curr == this.tail) {
                     this.tail = prev;
-                    this.tail.setNext(null);
+                    prev.setNext(null);
                 } else {
-                    prev.setNext(next);
+                    prev.setNext(curr.getNext());
                 }
+                this.size--;
+                System.gc();
             } else {
-                prev = curr;
+                dict.put(key, 1);
             }
-            curr = next;
+            prev = curr;
+            curr = curr.getNext();
         }
     }
 
@@ -151,7 +154,7 @@ public class TelephoneBook {
 //this function reverse the order of the list
         TelephoneNode curr = this.head;
         TelephoneNode prev = null;
-        TelephoneNode next = null;
+        TelephoneNode next;
         while (curr != null) {
             next = curr.getNext();
             curr.setNext(prev);
@@ -162,13 +165,10 @@ public class TelephoneBook {
         this.head = prev;
     }
 
-    public void saveToFile() {
+    public void saveToFile(String fileName) {
 //          this function save the phone book to a txt file.
 //          inputs: file name with full path from the user
         // get the file name from the user
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter file name with full path for saving the phone book:");
-        String fileName = scanner.nextLine();
         if (!fileName.endsWith(".txt")) {
             fileName += ".txt";
         }
@@ -207,7 +207,7 @@ public class TelephoneBook {
         System.out.println("11. Exit");
     }
 
-    public static void menu(TelephoneBook telephoneBook, Scanner scanner) throws IOException {
+    public static void menu(TelephoneBook telephoneBook, Scanner scanner) {
         int choice;
         String name;
         String number;
@@ -251,7 +251,7 @@ public class TelephoneBook {
                 case 9:
                     System.out.println("Enter file name:");
                     name = scanner.next();
-                    telephoneBook.saveToFile();
+                    telephoneBook.saveToFile(name);
                     break;
                 case 10:
                     System.out.println("Enter file name:");
@@ -272,22 +272,18 @@ public class TelephoneBook {
 //        take input from file
         String test1 = "Ex1\\test1.txt";
 
-        Boolean fromFile = false;
+        Boolean fromFile = true;
 
         if (fromFile) {
             try {
                 Scanner scanner = new Scanner(new FileInputStream(test1));
                 menu(telephoneBook, scanner);
-            } catch (IOException e) {
+            } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
         } else {
             Scanner scanner = new Scanner(System.in);
-            try {
-                menu(telephoneBook, scanner);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            menu(telephoneBook, scanner);
         }
         System.out.println("Bye Bye");
     }
