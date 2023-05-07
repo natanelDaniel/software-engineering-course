@@ -214,62 +214,62 @@ public class TelephoneBook {
     }
 
     public static void menu(TelephoneBook telephoneBook, Scanner scanner) {
-        String choice;
+        Integer choice;
         String name;
         String number;
         ArrayList<TelephoneNode> matches = new ArrayList<TelephoneNode>();
         do {
             printMenu();
-            choice = scanner.next();
+            choice = Integer.parseInt(scanner.next());
             switch (choice) {
-                case "1":
+                case 1:
                     System.out.println("Enter name:");
                     name = scanner.next();
                     System.out.println("Enter number:");
                     number = scanner.next();
                     telephoneBook.addContact(name, number);
                     break;
-                case "2":
+                case 2:
                     System.out.println("Enter name:");
                     name = scanner.next();
                     telephoneBook.deleteContact(name);
                     break;
-                case "3":
+                case 3:
                     telephoneBook.printContacts();
                     break;
-                case "4":
+                case 4:
                     System.out.println("Enter name:");
                     name = scanner.next();
                     matches = telephoneBook.findContact(name);
                     break;
-                case "5":
+                case 5:
                     telephoneBook.sortContactsByName();
                     break;
-                case "6":
+                case 6:
                     telephoneBook.sortContactsByNumber();
                     break;
-                case "7":
+                case 7:
                     telephoneBook.removeDuplicates();
                     break;
-                case "8":
+                case 8:
                     telephoneBook.reverse();
                     break;
-                case "9":
+                case 9:
                     System.out.println("Enter file name:");
                     name = scanner.next();
                     telephoneBook.saveToFile(name);
                     break;
-                case "10":
+                case 10:
                     System.out.println("Enter file name:");
                     name = scanner.next();
                     telephoneBook.loadFromFile(name);
                     break;
-                case "11":
+                case 11:
                     break;
                 default:
                     System.out.println("Invalid choice");
             }
-        } while (choice != "11");
+        } while (choice != 11);
     }
 
 
@@ -278,7 +278,7 @@ public class TelephoneBook {
 //        take input from file
         String test1 = "Ex1\\test1.txt";
 
-        Boolean fromFile = true;
+        Boolean fromFile = false;
 
         if (fromFile) {
             try {
