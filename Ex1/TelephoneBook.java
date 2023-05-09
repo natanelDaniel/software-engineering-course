@@ -214,60 +214,91 @@ public class TelephoneBook {
     }
 
     public static void menu(TelephoneBook telephoneBook, Scanner scanner) {
-        Integer choice;
+        Integer choice = 0; // initialize choice to an invalid value
         String name;
         String number;
         ArrayList<TelephoneNode> matches = new ArrayList<TelephoneNode>();
         do {
             printMenu();
-            choice = Integer.parseInt(scanner.next());
-            switch (choice) {
-                case 1:
-                    System.out.println("Enter name:");
-                    name = scanner.next();
-                    System.out.println("Enter number:");
-                    number = scanner.next();
-                    telephoneBook.addContact(name, number);
-                    break;
-                case 2:
-                    System.out.println("Enter name:");
-                    name = scanner.next();
-                    telephoneBook.deleteContact(name);
-                    break;
-                case 3:
-                    telephoneBook.printContacts();
-                    break;
-                case 4:
-                    System.out.println("Enter name:");
-                    name = scanner.next();
-                    matches = telephoneBook.findContact(name);
-                    break;
-                case 5:
-                    telephoneBook.sortContactsByName();
-                    break;
-                case 6:
-                    telephoneBook.sortContactsByNumber();
-                    break;
-                case 7:
-                    telephoneBook.removeDuplicates();
-                    break;
-                case 8:
-                    telephoneBook.reverse();
-                    break;
-                case 9:
-                    System.out.println("Enter file name:");
-                    name = scanner.next();
-                    telephoneBook.saveToFile(name);
-                    break;
-                case 10:
-                    System.out.println("Enter file name:");
-                    name = scanner.next();
-                    telephoneBook.loadFromFile(name);
-                    break;
-                case 11:
-                    break;
-                default:
-                    System.out.println("Invalid choice");
+            // Check if input is an integer
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        System.out.println("Enter name:");
+                        name = scanner.next();
+                        // Check if name is not empty
+                        if (!name.isEmpty()) {
+                            System.out.println("Enter number:");
+                            number = scanner.next();
+                            // Check if number is a valid 10-digit phone number
+                            if (number.matches("\\d{10}")) {
+                                telephoneBook.addContact(name, number);
+                            } else {
+                                System.out.println("Invalid phone number format.");
+                            }
+                        } else {
+                            System.out.println("Name cannot be empty.");
+                        }
+                        break;
+                    case 2:
+                        System.out.println("Enter name:");
+                        name = scanner.next();
+                        // Check if name is not empty
+                        if (!name.isEmpty()) {
+                            telephoneBook.deleteContact(name);
+                        } else {
+                            System.out.println("Name cannot be empty.");
+                        }
+                        break;
+                    case 3:
+                        telephoneBook.printContacts();
+                        break;
+                    case 4:
+                        System.out.println("Enter name:");
+                        name = scanner.next();
+                        // Check if name is not empty
+                        if (!name.isEmpty()) {
+                            matches = telephoneBook.findContact(name);
+                        } else {
+                            System.out.println("Name cannot be empty.");
+                        }
+                        break;
+                    case 5:
+                        telephoneBook.sortContactsByName();
+                        break;
+                    case 6:
+                        telephoneBook.sortContactsByNumber();
+                        break;
+                    case 7:
+                        telephoneBook.removeDuplicates();
+                        break;
+                    case 8:
+                        telephoneBook.reverse();
+                        break;
+                    case 9:
+                        System.out.println("Enter file name:");
+                        name = scanner.next();
+                        // Check if file name is not empty
+                        if (!name.isEmpty()) {
+                            telephoneBook.saveToFile(name);
+                        } else {
+                            System.out.println("File name cannot be empty.");
+                        }
+                        break;
+                    case 10:
+                        System.out.println("Enter file name:");
+                        name = scanner.next();
+                        telephoneBook.loadFromFile(name);
+                        break;
+                    case 11:
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter an integer.");
+                scanner.next(); // discard invalid input
             }
         } while (choice != 11);
     }
@@ -278,7 +309,7 @@ public class TelephoneBook {
 //        take input from file
         String test1 = "Ex1\\test1.txt";
 
-        Boolean fromFile = true;
+        Boolean fromFile = false;
 
         if (fromFile) {
             try {
