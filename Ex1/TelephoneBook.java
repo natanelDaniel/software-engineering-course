@@ -57,14 +57,17 @@ public class TelephoneBook {
         }
     }
 
-    public void printContacts() {
-        System.out.println("*********************************");
+    public String toString() {
+//      This function print all the contacts in the telephone book
+        String str = "";
+        str += "*********************************\n";
         TelephoneNode curr = this.head;
         for (int i = 0; i < this.size; i++) {
-            System.out.println("Contact " + i + ": Name: " + curr.getName() + ", Phone Number: " + curr.getNumber());
+            str += "Contact " + i + ": " + curr + "\n";
             curr = curr.getNext();
         }
-        System.out.println("*********************************");
+        str += "*********************************\n";
+        return str;
     }
 
     public ArrayList<TelephoneNode> findContact(String name) {
@@ -74,7 +77,8 @@ public class TelephoneBook {
         for (int i = 0; i < this.size; i++) {
             if (curr.getName().equals(name)) {
                 matches.add(curr);
-                System.out.println("Contact " + i + ": Name: " + curr.getName() + ", Phone Number: " + curr.getNumber());
+//                matches.add(new TelephoneNode(curr.getName(), curr.getNumber()));
+                System.out.println("Contact " + i + ": " + curr);
             }
             curr = curr.getNext();
         }
@@ -83,16 +87,18 @@ public class TelephoneBook {
         }
         return matches;
     }
-
-    public void sortContactsByName() {
-//      this function sort the contacts linked list by name in Lexicographic order
+    public TelephoneNode[] toArray() {
+//      This function return array of the contacts
         TelephoneNode curr = this.head;
         TelephoneNode[] arr = new TelephoneNode[this.size];
         for (int i = 0; i < this.size; i++) {
             arr[i] = curr;
             curr = curr.getNext();
         }
-        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getName));
+        return arr;
+    }
+    public void fromArray(TelephoneNode[] arr) {
+//      This function get array of the contacts and return the head of the linked list
         this.head = arr[0];
         this.tail = arr[this.size - 1];
         for (int i = 0; i < this.size - 1; i++) {
@@ -101,21 +107,18 @@ public class TelephoneBook {
         this.tail.setNext(null);
     }
 
+    public void sortContactsByName() {
+//      this function sort the contacts linked list by name in Lexicographic order
+        TelephoneNode[] arr = this.toArray();
+        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getName));
+        this.fromArray(arr);
+    }
+
     public void sortContactsByNumber() {
 //        this function sort the contacts by their number from the biggest to the smallest
-        TelephoneNode curr = this.head;
-        TelephoneNode[] arr = new TelephoneNode[this.size];
-        for (int i = 0; i < this.size; i++) {
-            arr[i] = curr;
-            curr = curr.getNext();
-        }
+        TelephoneNode[] arr = this.toArray();
         Arrays.sort(arr, Comparator.comparing(TelephoneNode::getNumber));
-        this.head = arr[0];
-        this.tail = arr[this.size - 1];
-        for (int i = 0; i < this.size - 1; i++) {
-            arr[i].setNext(arr[i + 1]);
-        }
-        this.tail.setNext(null);
+        this.fromArray(arr);
     }
     public void removeDuplicates() {
 //        This function remove all the duplicates
@@ -252,7 +255,7 @@ public class TelephoneBook {
                         }
                         break;
                     case 3:
-                        telephoneBook.printContacts();
+                        System.out.println(telephoneBook.toString());
                         break;
                     case 4:
                         System.out.println("Enter name:");
@@ -309,7 +312,7 @@ public class TelephoneBook {
 //        take input from file
         String test1 = "Ex1\\test1.txt";
 
-        Boolean fromFile = false;
+        Boolean fromFile = true;
 
         if (fromFile) {
             try {

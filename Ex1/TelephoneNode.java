@@ -13,9 +13,7 @@ public class TelephoneNode {
         this.next = null;
     }
 
-    public String getName() {
-        return this.name;
-    }
+    public String getName() {return this.name;}
 
     public String getNumber() {
         return this.number;
@@ -27,5 +25,9 @@ public class TelephoneNode {
 
     public void setNext(TelephoneNode next_) {
         this.next = next_;
+    }
+
+    public String toString() {
+        return "Name: " + this.name + ", Phone Number: " + this.number;
     }
 }
