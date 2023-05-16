@@ -78,46 +78,47 @@ public class TelephoneBook {
             if (curr.getName().equals(name)) {
                 matches.add(curr);
 //                matches.add(new TelephoneNode(curr.getName(), curr.getNumber()));
-                System.out.println("Contact " + i + ": " + curr);
+//                System.out.println("Contact " + i + ": " + curr);
             }
             curr = curr.getNext();
         }
         if (matches.isEmpty()) {
-            System.out.println("Contact " + name + " not found");
+            return null;
         }
         return matches;
     }
-    public TelephoneNode[] toArray() {
+    public ArrayList<TelephoneNode> toArray() {
 //      This function return array of the contacts
         TelephoneNode curr = this.head;
-        TelephoneNode[] arr = new TelephoneNode[this.size];
+        ArrayList<TelephoneNode> arr = new ArrayList<TelephoneNode>();
         for (int i = 0; i < this.size; i++) {
-            arr[i] = curr;
+            arr.add(curr);
             curr = curr.getNext();
         }
         return arr;
     }
-    public void fromArray(TelephoneNode[] arr) {
+    public void fromArray(ArrayList<TelephoneNode> arr) {
 //      This function get array of the contacts and return the head of the linked list
-        this.head = arr[0];
-        this.tail = arr[this.size - 1];
+        this.head = arr.get(0);
+        this.tail = arr.get(this.size - 1);
         for (int i = 0; i < this.size - 1; i++) {
-            arr[i].setNext(arr[i + 1]);
+            arr.get(i).setNext(arr.get(i + 1));
         }
         this.tail.setNext(null);
     }
 
     public void sortContactsByName() {
 //      this function sort the contacts linked list by name in Lexicographic order
-        TelephoneNode[] arr = this.toArray();
-        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getName));
+        ArrayList<TelephoneNode> arr = this.toArray();
+        Collections.sort(arr, new telephoneNodeComp());
         this.fromArray(arr);
     }
 
     public void sortContactsByNumber() {
 //        this function sort the contacts by their number from the biggest to the smallest
-        TelephoneNode[] arr = this.toArray();
-        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getNumber));
+        ArrayList<TelephoneNode> arr = this.toArray();
+//        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getNumber));
+        Collections.sort(arr, new telephoneNodeCompByNumber());
         this.fromArray(arr);
     }
     public void removeDuplicates() {
@@ -232,6 +233,10 @@ public class TelephoneBook {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
+                            if (telephoneBook.findContact(name) != null) {
+                                System.out.println("contact " + name + " already exists in the phone book.");
+                                break;
+                            }
                             System.out.println("Enter number:");
                             number = scanner.next();
                             // Check if number is a valid 10-digit phone number
@@ -263,14 +268,31 @@ public class TelephoneBook {
                         // Check if name is not empty
                         if (!name.isEmpty()) {
                             matches = telephoneBook.findContact(name);
+                            if (matches == null){
+                                System.out.println("No matches found for " + name);
+                            }
+                            else {
+                                System.out.println("Found " + matches.size() + " matches:");
+                                for (TelephoneNode match : matches) {
+                                    System.out.println(match);
+                                }
+                            }
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
                         break;
                     case 5:
+                        if (telephoneBook.getSize() == 0) {
+                            System.out.println("Phone book is empty.");
+                            break;
+                        }
                         telephoneBook.sortContactsByName();
                         break;
                     case 6:
+                        if (telephoneBook.getSize() == 0) {
+                            System.out.println("Phone book is empty.");
+                            break;
+                        }
                         telephoneBook.sortContactsByNumber();
                         break;
                     case 7:
@@ -305,8 +327,7 @@ public class TelephoneBook {
             }
         } while (choice != 11);
     }
-
-
+    public int getSize() {return size;}
     public static void main(String[] args) {
         TelephoneBook telephoneBook = new TelephoneBook();
 //        take input from file
