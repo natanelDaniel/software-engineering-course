@@ -203,7 +203,7 @@ public class TelephoneBook {
         }
     }
 
-    public static void printMenu() {
+    public void printMenu() {
         System.out.println("1. Add contact");
         System.out.println("2. Delete contact");
         System.out.println("3. Print contacts");
@@ -217,13 +217,13 @@ public class TelephoneBook {
         System.out.println("11. Exit");
     }
 
-    public static void menu(TelephoneBook telephoneBook, Scanner scanner) {
+    public void menu(Scanner scanner) {
         Integer choice = 0; // initialize choice to an invalid value
         String name;
         String number;
         ArrayList<TelephoneNode> matches = new ArrayList<TelephoneNode>();
         do {
-            printMenu();
+            this.printMenu();
             // Check if input is an integer
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
@@ -233,7 +233,7 @@ public class TelephoneBook {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            if (telephoneBook.findContact(name) != null) {
+                            if (this.findContact(name) != null) {
                                 System.out.println("contact " + name + " already exists in the phone book.");
                                 break;
                             }
@@ -241,7 +241,7 @@ public class TelephoneBook {
                             number = scanner.next();
                             // Check if number is a valid 10-digit phone number
                             if (number.matches("\\d{10}")) {
-                                telephoneBook.addContact(name, number);
+                                this.addContact(name, number);
                             } else {
                                 System.out.println("Invalid phone number format.");
                             }
@@ -254,20 +254,20 @@ public class TelephoneBook {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            telephoneBook.deleteContact(name);
+                            this.deleteContact(name);
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
                         break;
                     case 3:
-                        System.out.println(telephoneBook.toString());
+                        System.out.println(this.toString());
                         break;
                     case 4:
                         System.out.println("Enter name:");
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            matches = telephoneBook.findContact(name);
+                            matches = this.findContact(name);
                             if (matches == null){
                                 System.out.println("No matches found for " + name);
                             }
@@ -282,31 +282,31 @@ public class TelephoneBook {
                         }
                         break;
                     case 5:
-                        if (telephoneBook.getSize() == 0) {
+                        if (this.getSize() == 0) {
                             System.out.println("Phone book is empty.");
                             break;
                         }
-                        telephoneBook.sortContactsByName();
+                        this.sortContactsByName();
                         break;
                     case 6:
-                        if (telephoneBook.getSize() == 0) {
+                        if (this.getSize() == 0) {
                             System.out.println("Phone book is empty.");
                             break;
                         }
-                        telephoneBook.sortContactsByNumber();
+                        this.sortContactsByNumber();
                         break;
                     case 7:
-                        telephoneBook.removeDuplicates();
+                        this.removeDuplicates();
                         break;
                     case 8:
-                        telephoneBook.reverse();
+                        this.reverse();
                         break;
                     case 9:
                         System.out.println("Enter file name:");
                         name = scanner.next();
                         // Check if file name is not empty
                         if (!name.isEmpty()) {
-                            telephoneBook.saveToFile(name);
+                            this.saveToFile(name);
                         } else {
                             System.out.println("File name cannot be empty.");
                         }
@@ -314,7 +314,7 @@ public class TelephoneBook {
                     case 10:
                         System.out.println("Enter file name:");
                         name = scanner.next();
-                        telephoneBook.loadFromFile(name);
+                        this.loadFromFile(name);
                         break;
                     case 11:
                         break;
@@ -338,13 +338,13 @@ public class TelephoneBook {
         if (fromFile) {
             try {
                 Scanner scanner = new Scanner(new FileInputStream(test1));
-                menu(telephoneBook, scanner);
+                telephoneBook.menu(scanner);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
         } else {
             Scanner scanner = new Scanner(System.in);
-            menu(telephoneBook, scanner);
+            telephoneBook.menu(scanner);
         }
         System.out.println("Bye Bye");
     }
