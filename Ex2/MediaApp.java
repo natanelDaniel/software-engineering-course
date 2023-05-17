@@ -77,7 +77,7 @@ public class MediaApp {
         System.out.println(media.mediaName + " is now playing for " + media.mediaLength + " time");
     }
 
-    public static void printMediaMenu() {
+    public void printMediaMenu() {
         System.out.println("1. Add media");
         System.out.println("2. Play media by name");
         System.out.println("3. Delete media by name");
@@ -87,7 +87,7 @@ public class MediaApp {
         System.out.println("7. Back to main menu");
     }
 
-    public static void menu(MediaApp mediaApp, Scanner scanner) {
+    public void menu(Scanner scanner) {
         Integer choice = 0; // initialize choice to an invalid value
         String name;
         Float length;
@@ -105,7 +105,7 @@ public class MediaApp {
                             length = scanner.nextFloat();
                             System.out.println("Enter media type (1 for MUSIC, 2 for VIDEO):");
                             Media.MediaType type = Media.typeValue[(scanner.nextInt())-1];
-                            mediaApp.addMedia(name, length, type);
+                            this.addMedia(name, length, type);
                             System.out.println(name + " added successfully.");
                         break;
                     case 2:
@@ -113,7 +113,7 @@ public class MediaApp {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            mediaApp.playMedia(name);
+                            this.playMedia(name);
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
@@ -123,19 +123,19 @@ public class MediaApp {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            mediaApp.deleteMedia(name);
+                            this.deleteMedia(name);
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
                         break;
                     case 4:
-                        mediaApp.playAllMedia();
+                        this.playAllMedia();
                         break;
                     case 5:
-                        mediaApp.playAllFromType(Media.MediaType.MUSIC);
+                        this.playAllFromType(Media.MediaType.MUSIC);
                         break;
                     case 6:
-                        mediaApp.playAllFromType(Media.MediaType.VIDEO);
+                        this.playAllFromType(Media.MediaType.VIDEO);
                         break;
                     case 7:
                         System.out.println("Leaving Media App...");
@@ -160,13 +160,13 @@ public class MediaApp {
         if (fromFile) {
             try {
                 Scanner scanner = new Scanner(new FileInputStream(test1));
-                menu(mediaApp, scanner);
+                mediaApp.menu(scanner);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
         } else {
             Scanner scanner = new Scanner(System.in);
-            menu(mediaApp, scanner);
+            mediaApp.menu(scanner);
         }
         System.out.println("Bye Bye");
     }

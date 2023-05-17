@@ -1,4 +1,7 @@
-package Ex1;
+package Ex2;
+
+import Ex1.TelephoneNode;
+import Ex2.Event;
 
 import java.util.Date;
 

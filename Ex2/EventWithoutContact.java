@@ -1,7 +1,9 @@
-package Ex1;
+package Ex2;
+import Ex2.Event;
+
 import java.util.Date;
 
-public class EventWithoutContact extends Event{
+public class EventWithoutContact extends Event {
     private String description;
     public EventWithoutContact(Date date, int duration, String description) {
         super(date, duration);

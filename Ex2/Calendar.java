@@ -1,4 +1,6 @@
-package Ex1;
+package Ex2;
+
+import Ex1.TelephoneNode;
 
 import java.util.ArrayList;
 import java.util.Comparator;
