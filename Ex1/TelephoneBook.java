@@ -70,22 +70,16 @@ public class TelephoneBook {
         return str;
     }
 
-    public ArrayList<TelephoneNode> findContact(String name) {
+    public static TelephoneNode findContact(TelephoneNode head, String name) {
 //      This function get name of contact, print all the matches to the name and return array-list of the contacts
-        TelephoneNode curr = this.head;
-        ArrayList<TelephoneNode> matches = new ArrayList<TelephoneNode>();
-        for (int i = 0; i < this.size; i++) {
+        TelephoneNode curr = head;
+        while (curr != null) {
             if (curr.getName().equals(name)) {
-                matches.add(curr);
-//                matches.add(new TelephoneNode(curr.getName(), curr.getNumber()));
-//                System.out.println("Contact " + i + ": " + curr);
+                return curr;
             }
             curr = curr.getNext();
         }
-        if (matches.isEmpty()) {
-            return null;
-        }
-        return matches;
+        return null;
     }
     public ArrayList<TelephoneNode> toArray() {
 //      This function return array of the contacts
@@ -221,7 +215,7 @@ public class TelephoneBook {
         Integer choice = 0; // initialize choice to an invalid value
         String name;
         String number;
-        ArrayList<TelephoneNode> matches = new ArrayList<TelephoneNode>();
+
         do {
             this.printMenu();
             // Check if input is an integer
@@ -233,7 +227,7 @@ public class TelephoneBook {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            if (this.findContact(name) != null) {
+                            if (this.findContact(this.getHead(), name) != null) {
                                 System.out.println("contact " + name + " already exists in the phone book.");
                                 break;
                             }
@@ -260,22 +254,19 @@ public class TelephoneBook {
                         }
                         break;
                     case 3:
-                        System.out.println(this.toString());
+                        System.out.println(this);
                         break;
                     case 4:
                         System.out.println("Enter name:");
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            matches = this.findContact(name);
-                            if (matches == null){
+                            TelephoneNode matche = this.findContact(this.getHead(), name);
+                            if (matche == null){
                                 System.out.println("No matches found for " + name);
                             }
                             else {
-                                System.out.println("Found " + matches.size() + " matches:");
-                                for (TelephoneNode match : matches) {
-                                    System.out.println(match);
-                                }
+                                System.out.println(matche);
                             }
                         } else {
                             System.out.println("Name cannot be empty.");
@@ -347,5 +338,9 @@ public class TelephoneBook {
             telephoneBook.menu(scanner);
         }
         System.out.println("Bye Bye");
+    }
+
+    public TelephoneNode getHead() {
+        return head;
     }
 }

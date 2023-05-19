@@ -45,4 +45,8 @@ public class Event {
         return str;
     }
 
+    public boolean equals(Event event){
+        return this.date.equals(event.date) && this.duration == event.duration;
+    }
+
 }
