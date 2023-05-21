@@ -47,7 +47,6 @@ public class Calendar {
         return str;
     }
 
-
     public String toString(){
         //this function returns a string representation of the calendar
         String str = "Calendar:\n";
@@ -75,6 +74,26 @@ public class Calendar {
         }
         if (!found){
             System.out.println("No events with " + name + " found");
+        }
+    }
+
+    public void removeAllEventsWithSpecifContact(String name){
+        //this function removes all the events with a specific contact
+        for (int day_i = 0; day_i < events.size(); day_i++) {
+            int event_i = 0;
+            while (event_i < events.get(day_i).size()) {
+                if (events.get(day_i).get(event_i) instanceof EventWithContact){
+                    if (((EventWithContact) events.get(day_i).get(event_i)).getContact().getName().equals(name)){
+                        this.removeEvent(events.get(day_i).get(event_i));
+                    }
+                    else{
+                        event_i++;
+                    }
+                }
+                else{
+                    event_i++;
+                }
+            }
         }
     }
 

@@ -1,5 +1,8 @@
 package Ex1;
 
+import Ex2.Calendar;
+import Ex2.SMS;
+
 import java.io.*;
 import java.util.*;
 
@@ -189,7 +192,14 @@ public class TelephoneBook {
             String line = reader.readLine();
             while (line != null) {
                 String[] parts = line.split("\\s*[,-]\\s*|[,-]\\s+");
-                addContact(parts[0], parts[1]);
+//                check if the contact already exist
+                TelephoneNode contact = findContact(this.head, parts[0]);
+                if (contact != null) {
+                    System.out.println("Contact " + parts[0] + " already exists");
+                }
+                else {
+                    addContact(parts[0], parts[1]);
+                }
                 line = reader.readLine();
             }
             reader.close();
@@ -212,7 +222,7 @@ public class TelephoneBook {
         System.out.println("11. Exit");
     }
 
-    public void menu(Scanner scanner) {
+    public void menu(Scanner scanner, SMS sms, Calendar calendar) {
         Integer choice = 0; // initialize choice to an invalid value
         String name;
         String number;
@@ -250,6 +260,8 @@ public class TelephoneBook {
                         // Check if name is not empty
                         if (!name.isEmpty()) {
                             this.deleteContact(name);
+                            sms.deleteChat(name);
+                            calendar.removeAllEventsWithSpecifContact(name);
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
@@ -321,27 +333,6 @@ public class TelephoneBook {
     }
 
     public int getSize() {return size;}
-
-    public static void main(String[] args) {
-        TelephoneBook telephoneBook = new TelephoneBook();
-//        take input from file
-        String test1 = "Ex1\\test1.txt";
-
-        Boolean fromFile = false;
-
-        if (fromFile) {
-            try {
-                Scanner scanner = new Scanner(new FileInputStream(test1));
-                telephoneBook.menu(scanner);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            Scanner scanner = new Scanner(System.in);
-            telephoneBook.menu(scanner);
-        }
-        System.out.println("Bye Bye");
-    }
 
     public TelephoneNode getHead() {
         return head;

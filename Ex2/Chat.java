@@ -38,4 +38,11 @@ public class Chat {
             System.out.println(message);
         }
     }
+    public String toString() {
+        String result = "Chat with " + contact + ":\n";
+        for (String message : messages) {
+            result += message + "\n";
+        }
+    	return result;
+    }
 }
