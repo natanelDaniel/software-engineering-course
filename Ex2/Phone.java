@@ -55,7 +55,7 @@ public class Phone {
                         tb.menu(scanner);
                         break;
                     case 2:
-                        //sms.menu(scanner);
+                        sms.menu();
                         break;
                     case 3:
                         cal.menu(scanner, tb);
@@ -97,7 +97,7 @@ public class Phone {
         String phoneNum = scanner.nextLine();
         Phone phone = new Phone(name, phoneNum);
         String test1 = "Ex2\\Tests\\phoneTest.txt";
-        Boolean fromFile = true;
+        Boolean fromFile = false;
         if (fromFile) {
             try {
                 scanner = new Scanner(new FileInputStream(test1));
