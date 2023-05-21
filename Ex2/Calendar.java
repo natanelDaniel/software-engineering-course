@@ -302,7 +302,6 @@ public class Calendar {
         TelephoneBook telephoneBook = new TelephoneBook();
         telephoneBook.loadFromFile("Ex2\\Tests\\telephoneBook.txt");
         Boolean fromFile = true;
-
         if (fromFile) {
             try {
                 Scanner scanner = new Scanner(new FileInputStream(test1));
