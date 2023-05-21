@@ -169,7 +169,16 @@ public class TelephoneBook {
                     case 1: // Send SMS
                         System.out.println("Please Enter the name of contact you want to sms:");
                         name = scanner.next();
+                        // Check if name is not empty
+                        if (name.isEmpty()) {
+                            System.out.println("Name cannot be empty");
+                            break;
+                        }
                         contact = this.findContact(this.getHead(), name);
+                        if (contact == null) {
+                            System.out.println("Contact " + name + " not found");
+                            break;
+                        }
                         this.sendSMStoContact(contact, scanner);
                         break;
 
@@ -387,12 +396,12 @@ public class TelephoneBook {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            TelephoneNode matche = this.findContact(this.getHead(), name);
-                            if (matche == null){
+                            TelephoneNode matches = this.findContact(this.getHead(), name);
+                            if (matches == null){
                                 System.out.println("No matches found for " + name);
                             }
                             else {
-                                System.out.println(matche);
+                                System.out.println(matches);
                             }
                         } else {
                             System.out.println("Name cannot be empty.");
