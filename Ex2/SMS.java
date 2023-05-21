@@ -1,46 +1,7 @@
 package Ex2;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Scanner;
-
-class Chat {
-    private String contact;
-    private List<String> messages;
-
-    public Chat(String contact) {
-        this.contact = contact;
-        this.messages = new ArrayList<>();
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void addMessage(String message) {
-        messages.add(message);
-    }
-
-    public void deleteMessages() {
-        messages.clear();
-    }
-
-    public boolean containsSentence(String sentence) {
-        for (String message : messages) {
-            if (message.contains(sentence)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void printMessages() {
-        for (String message : messages) {
-            System.out.println(message);
-        }
-    }
-}
 
 public class SMS {
     private HashMap<String, Chat> chatMap;
@@ -64,7 +25,7 @@ public class SMS {
         if (chat != null) {
             chat.printMessages();
         } else {
-            System.out.println("No chat found for contact: " + contact);
+            System.out.println("No chat found with contact: " + contact);
         }
     }
 
@@ -82,11 +43,18 @@ public class SMS {
     }
 
     public void printAllChat() {
-        for (Chat chat : chatMap.values()) {
-            System.out.println("Chat with " + chat.getContact() + ":");
-            chat.printMessages();
-            System.out.println();
+        if (!chatMap.isEmpty()) {
+        	System.out.println("Printing all chats:");
+        	for (Chat chat : chatMap.values()) {
+                System.out.println("Chat with " + chat.getContact() + ":");
+                chat.printMessages();
+                System.out.println();
+            }
         }
+        else {
+        	System.out.println("No chats to print.");
+        }
+    	
     }
 
     public void menu() {
@@ -133,7 +101,6 @@ public class SMS {
                     sms.searchChat(sentence);
                     break;
                 case 5:
-                    System.out.println("Printing all chats:");
                     sms.printAllChat();
                     break;
                 case 6:
