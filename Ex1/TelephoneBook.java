@@ -5,7 +5,7 @@ import java.util.*;
 
 public class TelephoneBook {
     //    This Class represents a telephone book, which is a linked list of TelephoneNodes.
-//    Each TelephoneNode represents a contact in the telephone book.
+    //    Each TelephoneNode represents a contact in the telephone book.
     private TelephoneNode head;
     private TelephoneNode tail;
     private int size;
@@ -81,6 +81,131 @@ public class TelephoneBook {
         }
         return null;
     }
+
+    /*Send SMS to a contact*/
+    public void sendSMStoContact(TelephoneNode contact, Scanner scanner) {
+        System.out.println("Please Enter your message:");
+        scanner.nextLine();
+        String messege = scanner.nextLine();
+        contact.sendSMS(messege);
+        System.out.println("Your message was sent");
+    }
+
+    /*Deleting chat with a contact*/
+    public void removeChat(Scanner scanner) {
+        System.out.println("Please Enter the name of contact you want to remove the chat:");
+        String name = scanner.next();
+        TelephoneNode contact = this.findContact(this.getHead(), name);
+        contact.deleteChat();
+        System.out.println("Chat with " + contact.getName() + " has beem removed.");
+    }
+
+    /*Printing chat with a specific contact whose name is received as input*/
+    public void printContactChat(String name) {
+        TelephoneNode contact = this.findContact(this.getHead(), name);
+        contact.printSMSHistory();
+    }
+
+    /*Search for a sentence in any chat, print the names of all contacts
+    where the sentence exists.*/
+    public void searchChatInContacts(String sentence) {
+        ArrayList<TelephoneNode> matchingContacts = new ArrayList<>();
+        ArrayList<TelephoneNode> contacts = this.toArray();
+
+        for (TelephoneNode contact : contacts) {
+            if (contact.searchChat(sentence) != null) {
+                matchingContacts.add(contact);
+            }
+        }
+
+        if (matchingContacts != null) {
+            System.out.println("Contacts found with the sentence '" + sentence + "':");
+            for (TelephoneNode contact : matchingContacts) {
+                System.out.println(contact.getName());
+            }
+        }
+        else {
+            System.out.println("No contacts found with the sentence '" + sentence + "'.");
+        }
+    }
+
+    /*Display chat with a specific contact whose name is received as input.*/
+    public void printChatWithContact (String name) {
+        TelephoneNode contect = this.findContact(this.getHead(), name);
+        contect.printSMSHistory();
+    }
+
+    /*Display chats with all contacts.*/
+    public void printAllChats() {
+        ArrayList<TelephoneNode> contacts = this.toArray();
+
+        for (TelephoneNode contact : contacts) {
+            contact.printSMSHistory();
+        }
+    }
+
+    public void displaySMSManu () {
+        System.out.println("----------------------------");
+        System.out.println("1. Send SMS");
+        System.out.println("2. Delete chat");
+        System.out.println("3. Display chat with contact");
+        System.out.println("4. Search for a sentence in all chats");
+        System.out.println("5. Display all chats");
+        System.out.println("6. Back to main manu");
+    }
+
+    public void SMSManu(Scanner scanner) {
+        Integer choice = 0; // initialize choice to an invalid value
+
+        do {
+            this.displaySMSManu();
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                String name, sentence;
+                TelephoneNode contact = new TelephoneNode(null, null);
+
+                switch (choice) {
+
+                    case 1: // Send SMS
+                        System.out.println("Please Enter the name of contact you want to sms:");
+                        name = scanner.next();
+                        contact = this.findContact(this.getHead(), name);
+                        this.sendSMStoContact(contact, scanner);
+                        break;
+
+                    case 2: // Delete chat
+                        this.removeChat(scanner);
+                        break;
+
+                    case 3: // Display chat with contact
+                        System.out.println("Please Enter the name of contact you want to watch chat with him:");
+                        name = scanner.next();
+                        contact = this.findContact(this.getHead(), name);
+                        this.printChatWithContact(contact.getName());
+                        break;
+
+                    case 4: // Search for a sentence in all chats
+                        System.out.println("Please Enter the a sentence to search:");
+                        sentence = scanner.next();
+                        this.searchChatInContacts(sentence);
+
+                        break;
+                    case 5: // Display all chats
+                        this.printAllChats();
+                        break;
+
+                    case 6:
+                        break;
+
+                    default:
+                        System.out.println("[SMSManu]: Invalid choice");
+                }
+            }
+
+        } while(choice != 6);
+
+    }
+
     public ArrayList<TelephoneNode> toArray() {
 //      This function return array of the contacts
         TelephoneNode curr = this.head;
@@ -208,7 +333,8 @@ public class TelephoneBook {
         System.out.println("8. Reverse");
         System.out.println("9. Save to file");
         System.out.println("10. Load from file");
-        System.out.println("11. Exit");
+        System.out.println("11. SMS Application Manu");
+        System.out.println("12. Exit");
     }
 
     public void menu(Scanner scanner) {
@@ -308,6 +434,9 @@ public class TelephoneBook {
                         this.loadFromFile(name);
                         break;
                     case 11:
+                        this.SMSManu(scanner);
+                        break;
+                    case 12:
                         break;
                     default:
                         System.out.println("Invalid choice");
@@ -316,15 +445,17 @@ public class TelephoneBook {
                 System.out.println("Invalid input. Please enter an integer.");
                 scanner.next(); // discard invalid input
             }
-        } while (choice != 11);
+        } while (choice != 12);
     }
+
     public int getSize() {return size;}
+
     public static void main(String[] args) {
         TelephoneBook telephoneBook = new TelephoneBook();
 //        take input from file
         String test1 = "Ex1\\test1.txt";
 
-        Boolean fromFile = true;
+        Boolean fromFile = false;
 
         if (fromFile) {
             try {
