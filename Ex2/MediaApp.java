@@ -1,68 +1,76 @@
 package Ex2;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.Iterator;
 
-public class MediaApp {
+public class MediaApp { // this class is a container for Media objects
 
          public static class Media {
             public enum MediaType {
                 MUSIC, VIDEO
             }
 
-            static MediaType[] typeValue = MediaType.values();
+            static MediaType[] typeValue = MediaType.values(); // returns an array of all the enum values
             private final MediaType type;
             private String mediaName;
             private float mediaLength;
 
-            public Media(String name, float length, MediaType type) {
+            public Media(String name, float length, MediaType type) { // constructor
                 this.mediaName = name;
                 this.mediaLength = length;
                 this.type = type;
             }
         }
 
-    private Vector<Media> mediaList;
+    private Vector<Media> mediaList; // a vector of Media objects
 
     public MediaApp() {
         this.mediaList = new Vector<>();
-    }
+    } // constructor
 
 
-    public void addMedia(String name, float length, Media.MediaType type) {
+    public void addMedia(String name, float length, Media.MediaType type) { // adds a new Media object to the vector
         this.mediaList.add(new Media(name, length, type));
     }
 
-    public void deleteMedia(String name) {
+    public void deleteMedia(String name) { // deletes a Media object from the vector
         Iterator<Media> itr = this.mediaList.iterator();
-        while (itr.hasNext()) if (itr.next().mediaName.equals(name)) {
-            itr.remove();
-            return;
+        if (!mediaExists(name)) {
+            System.out.println("Media does not exist.");
         }
-    }
-
-    public void playMedia(String name) {
-        Media media;
-        Iterator<Media> itr = this.mediaList.iterator();
-        while (itr.hasNext()) {
-            media = itr.next();
-            if (media.mediaName.equals(name)) {
-                printMediaMessage(media);
+        else {
+            while (itr.hasNext()) if (itr.next().mediaName.equals(name)) {
+                itr.remove();
                 return;
             }
         }
     }
-    public void playAllMedia() {
+
+    public void playMedia(String name) { // plays a Media object from the vector
+        Media media;
+        Iterator<Media> itr = this.mediaList.iterator();
+        if (!mediaExists(name)) {
+            System.out.println("Media does not exist.");
+        }
+        else {
+            while (itr.hasNext()) {
+                media = itr.next();
+                if (media.mediaName.equals(name)) {
+                    printMediaMessage(media);
+                    return;
+                }
+            }
+        }
+    }
+    public void playAllMedia() { // plays all Media objects from the vector
         Iterator<Media> itr = this.mediaList.iterator();
         while (itr.hasNext()) {
             printMediaMessage(itr.next());
         }
     }
 
-    public void playAllFromType(Media.MediaType type) {
+    public void playAllFromType(Media.MediaType type) { // plays all Media objects of a certain type from the vector
         Iterator<Media> itr = this.mediaList.iterator();
         while (itr.hasNext()) {
             Media media = itr.next();
@@ -73,11 +81,11 @@ public class MediaApp {
     }
 
 
-    public void printMediaMessage(Media media) {
+    public void printMediaMessage(Media media) { // prints a message when playing a Media object
         System.out.println(media.mediaName + " is now playing for " + media.mediaLength + " time");
     }
 
-    public void printMediaMenu() {
+    public void printMediaMenu() { // prints the media menu
         System.out.println("1. Add media");
         System.out.println("2. Play media by name");
         System.out.println("3. Delete media by name");
@@ -87,7 +95,7 @@ public class MediaApp {
         System.out.println("7. Back to main menu");
     }
 
-    private boolean mediaExists(String name) {
+    private boolean mediaExists(String name) { // checks if a Media object exists in the vector
         Iterator<Media> itr = this.mediaList.iterator();
         while (itr.hasNext()) {
             if (itr.next().mediaName.equals(name)) {
@@ -97,7 +105,7 @@ public class MediaApp {
         return false;
     }
 
-    public void menu(Scanner scanner) {
+    public void menu(Scanner scanner) { // the media menu
         Integer choice = 0; // initialize choice to an invalid value
         String name;
         Float length;
@@ -128,12 +136,7 @@ public class MediaApp {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            if (!this.mediaExists(name)) {
-                                System.out.println("Media does not exist.");
-                            }
-                            else {
                                 this.playMedia(name);
-                            }
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
@@ -143,13 +146,9 @@ public class MediaApp {
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                            if (!this.mediaExists(name)) {
-                                System.out.println("Media does not exist.");
-                            }
-                            else {
                                 this.deleteMedia(name);
                                 System.out.println(name + " deleted successfully.");
-                            }
+
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
@@ -171,7 +170,7 @@ public class MediaApp {
                 }
             } else {
                 System.out.println("Invalid input. Please enter an integer.");
-                scanner.next(); // discard invalid input
+                scanner.next(); //  discard the invalid input
             }
         } while (choice != 7);
     }
