@@ -6,22 +6,22 @@ import java.util.Iterator;
 
 public class MediaApp { // this class is a container for Media objects
 
-         public static class Media {
-            public enum MediaType {
-                MUSIC, VIDEO
-            }
-
-            static MediaType[] typeValue = MediaType.values(); // returns an array of all the enum values
-            private final MediaType type;
-            private String mediaName;
-            private float mediaLength;
-
-            public Media(String name, float length, MediaType type) { // constructor
-                this.mediaName = name;
-                this.mediaLength = length;
-                this.type = type;
-            }
+    public static class Media {
+        public enum MediaType {
+            MUSIC, VIDEO
         }
+
+        static MediaType[] typeValue = MediaType.values(); // returns an array of all the enum values
+        private final MediaType type;
+        private String mediaName;
+        private float mediaLength;
+
+        public Media(String name, float length, MediaType type) { // constructor
+            this.mediaName = name;
+            this.mediaLength = length;
+            this.type = type;
+        }
+    }
 
     private Vector<Media> mediaList; // a vector of Media objects
 
@@ -38,10 +38,10 @@ public class MediaApp { // this class is a container for Media objects
         Iterator<Media> itr = this.mediaList.iterator();
         if (!mediaExists(name)) {
             System.out.println("Media does not exist.");
-        }
-        else {
+        } else {
             while (itr.hasNext()) if (itr.next().mediaName.equals(name)) {
                 itr.remove();
+                System.out.println(name + " deleted successfully.");
                 return;
             }
         }
@@ -52,8 +52,7 @@ public class MediaApp { // this class is a container for Media objects
         Iterator<Media> itr = this.mediaList.iterator();
         if (!mediaExists(name)) {
             System.out.println("Media does not exist.");
-        }
-        else {
+        } else {
             while (itr.hasNext()) {
                 media = itr.next();
                 if (media.mediaName.equals(name)) {
@@ -63,10 +62,16 @@ public class MediaApp { // this class is a container for Media objects
             }
         }
     }
+
     public void playAllMedia() { // plays all Media objects from the vector
         Iterator<Media> itr = this.mediaList.iterator();
-        while (itr.hasNext()) {
-            printMediaMessage(itr.next());
+        if (!itr.hasNext()) {
+            System.out.println("No media to play.");
+        } else {
+            System.out.println("Playing all media.");
+            do {
+                printMediaMessage(itr.next());
+            } while (itr.hasNext());
         }
     }
 
@@ -124,7 +129,7 @@ public class MediaApp { // this class is a container for Media objects
                             System.out.println("Enter media length:");
                             length = scanner.nextFloat();
                             System.out.println("Enter media type (1 for MUSIC, 2 for VIDEO):");
-                            Media.MediaType type = Media.typeValue[(scanner.nextInt())-1];
+                            Media.MediaType type = Media.typeValue[(scanner.nextInt()) - 1];
                             this.addMedia(name, length, type);
                             System.out.println(name + " added successfully.");
                         } else {
@@ -136,7 +141,7 @@ public class MediaApp { // this class is a container for Media objects
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                                this.playMedia(name);
+                            this.playMedia(name);
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
@@ -146,9 +151,7 @@ public class MediaApp { // this class is a container for Media objects
                         name = scanner.next();
                         // Check if name is not empty
                         if (!name.isEmpty()) {
-                                this.deleteMedia(name);
-                                System.out.println(name + " deleted successfully.");
-
+                            this.deleteMedia(name);
                         } else {
                             System.out.println("Name cannot be empty.");
                         }
@@ -175,3 +178,26 @@ public class MediaApp { // this class is a container for Media objects
         } while (choice != 7);
     }
 }
+
+
+//    public static void main(String[] args) {
+//        MediaApp mediaApp = new MediaApp();
+////        take input from file
+//        String test1 = "Ex1\\test1.txt";
+//
+//        Boolean fromFile = false;
+//
+//        if (fromFile) {
+//            try {
+//                Scanner scanner = new Scanner(new FileInputStream(test1));
+//                mediaApp.menu( scanner);
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
+//        } else {
+//            Scanner scanner = new Scanner(System.in);
+//            mediaApp.menu( scanner);        }
+//        System.out.println("Bye Bye");
+//    }
+//}
+
