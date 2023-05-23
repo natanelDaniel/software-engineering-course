@@ -7,8 +7,8 @@ import java.io.*;
 import java.util.*;
 
 public class TelephoneBook {
-    //    This Class represents a telephone book, which is a linked list of TelephoneNodes.
-    //    Each TelephoneNode represents a contact in the telephone book.
+    /*  This Class represents a telephone book, which is a linked list of TelephoneNodes.
+        Each TelephoneNode represents a contact in the telephone book. */
     private TelephoneNode head;
     private TelephoneNode tail;
     private int size;
@@ -48,7 +48,7 @@ public class TelephoneBook {
                 } else {
                     prev.setNext(curr.getNext());
                 }
-//                call garbage collector
+                //call garbage collector
                 System.gc();
                 break;
             }
@@ -61,7 +61,7 @@ public class TelephoneBook {
     }
 
     public String toString() {
-//      This function print all the contacts in the telephone book
+        //This function print all the contacts in the telephone book
         String str = "";
         str += "*********************************\n";
         TelephoneNode curr = this.head;
@@ -74,7 +74,7 @@ public class TelephoneBook {
     }
 
     public static TelephoneNode findContact(TelephoneNode head, String name) {
-//      This function get name of contact, print all the matches to the name and return array-list of the contacts
+        //This function get name of contact, print all the matches to the name and return array-list of the contacts
         TelephoneNode curr = head;
         while (curr != null) {
             if (curr.getName().equals(name)) {
@@ -86,7 +86,7 @@ public class TelephoneBook {
     }
 
     public ArrayList<TelephoneNode> toArray() {
-//      This function return array of the contacts
+        //This function return array of the contacts
         TelephoneNode curr = this.head;
         ArrayList<TelephoneNode> arr = new ArrayList<TelephoneNode>();
         for (int i = 0; i < this.size; i++) {
@@ -95,8 +95,9 @@ public class TelephoneBook {
         }
         return arr;
     }
+
     public void fromArray(ArrayList<TelephoneNode> arr) {
-//      This function get array of the contacts and return the head of the linked list
+        //This function get array of the contacts and return the head of the linked list
         this.head = arr.get(0);
         this.tail = arr.get(this.size - 1);
         for (int i = 0; i < this.size - 1; i++) {
@@ -106,24 +107,24 @@ public class TelephoneBook {
     }
 
     public void sortContactsByName() {
-//      this function sort the contacts linked list by name in Lexicographic order
+        //This function sort the contacts linked list by name in Lexicographic order
         ArrayList<TelephoneNode> arr = this.toArray();
         Collections.sort(arr, new telephoneNodeComp());
         this.fromArray(arr);
     }
 
     public void sortContactsByNumber() {
-//        this function sort the contacts by their number from the biggest to the smallest
+        //This function sort the contacts by their number from the biggest to the smallest
         ArrayList<TelephoneNode> arr = this.toArray();
-//        Arrays.sort(arr, Comparator.comparing(TelephoneNode::getNumber));
+        //Arrays.sort(arr, Comparator.comparing(TelephoneNode::getNumber));
         Collections.sort(arr, new telephoneNodeCompByNumber());
         this.fromArray(arr);
     }
+
     public void removeDuplicates() {
-//        This function remove all the duplicates
-//        lets create dict  - key is the name + number and value is the number of times the key appear
-//        dict in java is HashMap
-        HashMap<String, Integer> dict = new HashMap<>();
+        /* This function remove all the duplicates
+         lets create dict  - key is the name + number and value is the number of times the key appear*/
+        HashMap<String, Integer> dict = new HashMap<>(); // dict in java is HashMap
         TelephoneNode curr = this.head;
         TelephoneNode prev = null;
         while (curr != null) {
@@ -146,7 +147,7 @@ public class TelephoneBook {
     }
 
     public void reverse() {
-//this function reverse the order of the list
+        //this function reverse the order of the list
         TelephoneNode curr = this.head;
         TelephoneNode prev = null;
         TelephoneNode next;
@@ -161,9 +162,8 @@ public class TelephoneBook {
     }
 
     public void saveToFile(String fileName) {
-//          this function save the phone book to a txt file.
-//          inputs: file name with full path from the user
-        // get the file name from the user
+        /*this function save the phone book to a txt file.
+        inputs: file name with full path from the user*/
         if (!fileName.endsWith(".txt")) {
             fileName += ".txt";
         }
@@ -177,9 +177,8 @@ public class TelephoneBook {
                 curr = curr.getNext();
             }
             newFile.close();
-            System.out.println("Successfully written.");
-        }
-        catch (IOException e) {
+            System.out.println("Successfully written" + fileName + " to directory: " + System.getProperty("user.dir"));
+        } catch (IOException e) {
             System.out.println("An error has occurred.");
             e.printStackTrace();
         }
@@ -196,8 +195,7 @@ public class TelephoneBook {
                 TelephoneNode contact = findContact(this.head, parts[0]);
                 if (contact != null) {
                     System.out.println("Contact " + parts[0] + " already exists");
-                }
-                else {
+                } else {
                     addContact(parts[0], parts[1]);
                 }
                 line = reader.readLine();
@@ -275,10 +273,9 @@ public class TelephoneBook {
                         // Check if name is not empty
                         if (!name.isEmpty()) {
                             TelephoneNode matches = this.findContact(this.getHead(), name);
-                            if (matches == null){
+                            if (matches == null) {
                                 System.out.println("No matches found for " + name);
-                            }
-                            else {
+                            } else {
                                 System.out.println(matches);
                             }
                         } else {
@@ -332,7 +329,9 @@ public class TelephoneBook {
         } while (choice != 11);
     }
 
-    public int getSize() {return size;}
+    public int getSize() {
+        return size;
+    }
 
     public TelephoneNode getHead() {
         return head;
