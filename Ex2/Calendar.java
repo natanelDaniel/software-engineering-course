@@ -1,7 +1,7 @@
 package Ex2;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Calendar {
@@ -312,24 +312,24 @@ public class Calendar {
         return hour >= 0 && hour <= 23;
     }
 
-    public static void main(String[] args) {
-        Calendar calendar = new Calendar();
-//        take input from file
-        String test1 = "Ex2\\Tests\\calendar.txt";
-        TelephoneBook telephoneBook = new TelephoneBook();
-        telephoneBook.loadFromFile("Ex2\\Tests\\telephoneBook.txt");
-        Boolean fromFile = true;
-        if (fromFile) {
-            try {
-                Scanner scanner = new Scanner(new FileInputStream(test1));
-                calendar.menu(scanner, telephoneBook);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            Scanner scanner = new Scanner(System.in);
-            calendar.menu(scanner, telephoneBook);
-        }
-        System.out.println("Bye Bye");
-    }
+//    public static void main(String[] args) {
+//        Calendar calendar = new Calendar();
+////        take input from file
+//        String test1 = "Ex2\\Tests\\calendar.txt";
+//        TelephoneBook telephoneBook = new TelephoneBook();
+//        telephoneBook.loadFromFile("Ex2\\Tests\\telephoneBook.txt");
+//        Boolean fromFile = true;
+//        if (fromFile) {
+//            try {
+//                Scanner scanner = new Scanner(new FileInputStream(test1));
+//                calendar.menu(scanner, telephoneBook);
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
+//        } else {
+//            Scanner scanner = new Scanner(System.in);
+//            calendar.menu(scanner, telephoneBook);
+//        }
+//        System.out.println("Bye Bye");
+//    }
 }
