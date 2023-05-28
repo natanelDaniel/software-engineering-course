@@ -1,8 +1,5 @@
 package Ex2;
 
-import Ex1.TelephoneBook;
-import Ex1.TelephoneNode;
-
 import java.util.HashMap;
 import java.util.Scanner;
 

@@ -1,7 +1,5 @@
 package Ex2;
 
-import Ex1.TelephoneBook;
-import Ex1.TelephoneNode;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;

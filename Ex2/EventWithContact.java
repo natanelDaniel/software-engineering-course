@@ -1,8 +1,5 @@
 package Ex2;
 
-import Ex1.TelephoneNode;
-import Ex2.Event;
-
 import java.util.Date;
 
 public class EventWithContact extends Event {

@@ -178,26 +178,3 @@ public class MediaApp { // this class is a container for Media objects
         } while (choice != 7);
     }
 }
-
-
-//    public static void main(String[] args) {
-//        MediaApp mediaApp = new MediaApp();
-////        take input from file
-//        String test1 = "Ex1\\test1.txt";
-//
-//        Boolean fromFile = false;
-//
-//        if (fromFile) {
-//            try {
-//                Scanner scanner = new Scanner(new FileInputStream(test1));
-//                mediaApp.menu( scanner);
-//            } catch (FileNotFoundException e) {
-//                throw new RuntimeException(e);
-//            }
-//        } else {
-//            Scanner scanner = new Scanner(System.in);
-//            mediaApp.menu( scanner);        }
-//        System.out.println("Bye Bye");
-//    }
-//}
-
