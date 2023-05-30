@@ -1,7 +1,7 @@
-package Ex1;
+package Ex2;
 
+import Ex2.*;
 import Ex2.Calendar;
-import Ex2.SMS;
 
 import java.io.*;
 import java.util.*;

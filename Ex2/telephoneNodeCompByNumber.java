@@ -1,4 +1,4 @@
-package Ex1;
+package Ex2;
 
 import java.util.Comparator;
 public class telephoneNodeCompByNumber implements Comparator<TelephoneNode>{
