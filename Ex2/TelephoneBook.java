@@ -77,7 +77,7 @@ public class TelephoneBook {
         //This function get name of contact, print all the matches to the name and return array-list of the contacts
         TelephoneNode curr = head;
         while (curr != null) {
-            if (curr.getName().equals(name)) {
+            if (curr.getName().toLowerCase().equals(name.toLowerCase())) {
                 return curr;
             }
             curr = curr.getNext();

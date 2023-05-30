@@ -25,6 +25,19 @@ public class PhoneSystem {
         System.out.println("6. Exit");
     }
 
+    public String toString(){
+        String result = "Phone System:\n";
+        result += "Telephone Book:\n";
+        result += this.tb.toString() + "\n";
+        result += "SMS:\n";
+        result += this.sms.toString() + "\n";
+        result += "Calendar:\n";
+        result += this.cal.toString() + "\n";
+        result += "Media App:\n";
+        result += this.ma.toString() + "\n";
+        return result;
+    }
+
     public void LoadFromFile(String path){
         this.tb.loadFromFile(path);
     }
@@ -50,15 +63,7 @@ public class PhoneSystem {
                         this.ma.menu(scanner);
                         break;
                     case 5:
-                        System.out.println("Printing Phone's info");
-                        System.out.println("Phonebook:");
-                        System.out.println(this.tb);
-                        System.out.println("SMS:");
-                        System.out.println(this.sms);
-                        System.out.println("Calendar:");
-                        System.out.println(this.cal);
-                        System.out.println("Media App:");
-                        this.ma.playAllMedia();
+                        System.out.println(this);
                         break;
                     case 6:
                         System.out.println("Leaving Phone...");

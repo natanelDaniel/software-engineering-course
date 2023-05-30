@@ -11,7 +11,7 @@ public class TestMobilePhone {
         phoneSystem.LoadFromFile(telephoneBookPath);
 
         String test1 = "Ex2\\Tests\\phoneTest.txt";
-        Boolean fromFile = false;
+        Boolean fromFile = true;
         Scanner scanner;
         if (fromFile) {
             try {

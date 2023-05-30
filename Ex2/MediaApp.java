@@ -6,23 +6,6 @@ import java.util.Iterator;
 
 public class MediaApp { // this class is a container for Media objects
 
-    public static class Media {
-        public enum MediaType {
-            MUSIC, VIDEO
-        }
-
-        static MediaType[] typeValue = MediaType.values(); // returns an array of all the enum values
-        private final MediaType type;
-        private String mediaName;
-        private float mediaLength;
-
-        public Media(String name, float length, MediaType type) { // constructor
-            this.mediaName = name;
-            this.mediaLength = length;
-            this.type = type;
-        }
-    }
-
     private Vector<Media> mediaList; // a vector of Media objects
 
     public MediaApp() {
@@ -39,7 +22,7 @@ public class MediaApp { // this class is a container for Media objects
         if (!mediaExists(name)) {
             System.out.println("Media does not exist.");
         } else {
-            while (itr.hasNext()) if (itr.next().mediaName.equals(name)) {
+            while (itr.hasNext()) if (itr.next().getMediaName().toLowerCase().equals(name.toLowerCase())) {
                 itr.remove();
                 System.out.println(name + " deleted successfully.");
                 return;
@@ -55,24 +38,26 @@ public class MediaApp { // this class is a container for Media objects
         } else {
             while (itr.hasNext()) {
                 media = itr.next();
-                if (media.mediaName.equals(name)) {
-                    printMediaMessage(media);
+                if (media.getMediaName().toLowerCase().equals(name.toLowerCase())) {
+                    System.out.println(media);
                     return;
                 }
             }
         }
     }
 
-    public void playAllMedia() { // plays all Media objects from the vector
+    public String toString() { // plays all Media objects from the vector
         Iterator<Media> itr = this.mediaList.iterator();
+        String result;
         if (!itr.hasNext()) {
-            System.out.println("No media to play.");
+            result = "No media to play.";
         } else {
-            System.out.println("Playing all media.");
+            result = "Playing all media: \n";
             do {
-                printMediaMessage(itr.next());
+                result += itr.next() + "\n";
             } while (itr.hasNext());
         }
+        return result;
     }
 
     public void playAllFromType(Media.MediaType type) { // plays all Media objects of a certain type from the vector
@@ -80,14 +65,9 @@ public class MediaApp { // this class is a container for Media objects
         while (itr.hasNext()) {
             Media media = itr.next();
             if (media.type == type) {
-                printMediaMessage(media);
+                System.out.println(media);
             }
         }
-    }
-
-
-    public void printMediaMessage(Media media) { // prints a message when playing a Media object
-        System.out.println(media.mediaName + " is now playing for " + media.mediaLength + " time");
     }
 
     public void printMediaMenu() { // prints the media menu
@@ -103,7 +83,7 @@ public class MediaApp { // this class is a container for Media objects
     private boolean mediaExists(String name) { // checks if a Media object exists in the vector
         Iterator<Media> itr = this.mediaList.iterator();
         while (itr.hasNext()) {
-            if (itr.next().mediaName.equals(name)) {
+            if (itr.next().getMediaName().toLowerCase().equals(name.toLowerCase())) {
                 return true;
             }
         }
@@ -114,6 +94,8 @@ public class MediaApp { // this class is a container for Media objects
         Integer choice = 0; // initialize choice to an invalid value
         String name;
         Float length;
+        String input;
+        Integer type_num;
         do {
             printMediaMenu();
             // Check if input is an integer
@@ -127,9 +109,30 @@ public class MediaApp { // this class is a container for Media objects
                         // Check if name is not empty
                         if (!name.isEmpty()) {
                             System.out.println("Enter media length:");
-                            length = scanner.nextFloat();
+                            input = scanner.next();
+                            // Check if input is a float
+                            if (!input.matches("[-+]?[0-9]*\\.?[0-9]+")) {
+                                System.out.println("Length must be a number.");
+                                break;
+                            }
+                            length = Float.parseFloat(input);
+                            if ( ! isValidLength(length)) {
+                                System.out.println("Length must be positive.");
+                                break;
+                            }
                             System.out.println("Enter media type (1 for MUSIC, 2 for VIDEO):");
-                            Media.MediaType type = Media.typeValue[(scanner.nextInt()) - 1];
+                            input = scanner.next();
+                            // Check if input is an integer
+                            if (!input.matches("[0-9]+")) {
+                                System.out.println("Type must be a number.");
+                                break;
+                            }
+                            type_num = Integer.parseInt(input);
+                            if (type_num < 1 || type_num > 2) {
+                                System.out.println("Type must be 1 or 2.");
+                                break;
+                            }
+                            Media.MediaType type = Media.typeValue[(type_num - 1)];
                             this.addMedia(name, length, type);
                             System.out.println(name + " added successfully.");
                         } else {
@@ -157,7 +160,7 @@ public class MediaApp { // this class is a container for Media objects
                         }
                         break;
                     case 4:
-                        this.playAllMedia();
+                        System.out.println(this);
                         break;
                     case 5:
                         this.playAllFromType(Media.MediaType.MUSIC);
@@ -176,5 +179,9 @@ public class MediaApp { // this class is a container for Media objects
                 scanner.next(); //  discard the invalid input
             }
         } while (choice != 7);
+    }
+
+    private boolean isValidLength(Float length) {
+        return length > 0;
     }
 }

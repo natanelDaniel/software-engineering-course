@@ -27,15 +27,6 @@ public class SMS {
         chatMap.remove(contact);
     }
 
-    public void printChat(String contact) {
-        Chat chat = chatMap.get(contact);
-        if (chat != null) {
-            chat.printMessages();
-        } else {
-            System.out.println("No chat found with contact: " + contact);
-        }
-    }
-
     public void searchChat(String sentence) {
         boolean found = false;
         for (Chat chat : chatMap.values()) {

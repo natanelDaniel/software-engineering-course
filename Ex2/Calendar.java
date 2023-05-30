@@ -81,7 +81,8 @@ public class Calendar {
             int event_i = 0;
             while (event_i < events.get(day_i).size()) {
                 if (events.get(day_i).get(event_i) instanceof EventWithContact){
-                    if (((EventWithContact) events.get(day_i).get(event_i)).getContact().getName().equals(name)){
+                    if (((EventWithContact) events.get(day_i).get(event_i))
+                            .getContact().getName().toLowerCase().equals(name.toLowerCase())){
                         this.removeEvent(events.get(day_i).get(event_i));
                     }
                     else{
