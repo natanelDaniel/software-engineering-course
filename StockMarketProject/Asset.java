@@ -70,14 +70,14 @@ public abstract class Asset {
         this._buyers.add(transaction);
     }
 
-//    public void removeByIdBuyers(String id) {
-//        Transaction transaction = this.containsByIdBuyers(id);
-//        if (transaction == null) {
-//            System.out.println("Not in queue - cannot remove");
-//            return;
-//        }
-//        this._buyers.remove(transaction);
-//    }
+    public void removeByIdBuyers(String id) {
+        Transaction transaction = this.containsByIdBuyers(id);
+        if (transaction == null) {
+            System.out.println("Not in queue - cannot remove");
+            return;
+        }
+        this._buyers.remove(transaction);
+    }
 
     public Transaction containsByIdSellers(String id) {
         for (Transaction transaction : this._sellers) {
@@ -96,14 +96,14 @@ public abstract class Asset {
         this._sellers.add(transaction);
     }
 
-//    public void removeByIdSellers(String id) {
-//        Transaction transaction = this.containsByIdSellers(id);
-//        if (transaction == null) {
-//            System.out.println("Not in queue - cannot remove");
-//            return;
-//        }
-//        this._sellers.remove(transaction);
-//    }
+    public void removeByIdSellers(String id) {
+        Transaction transaction = this.containsByIdSellers(id);
+        if (transaction == null) {
+            System.out.println("Not in queue - cannot remove");
+            return;
+        }
+        this._sellers.remove(transaction);
+    }
 
     public void addPriceToHistory(double price) {
         this._historyPrices.add(price);
