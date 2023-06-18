@@ -176,10 +176,10 @@ public class StockMarket {
                     plotAsset(scanner);
                     break;
                 case "6":
-                    addAsset(scanner);
+                    addAssetFromScanner(scanner);
                     break;
                 case "7":
-                    removeAsset(scanner);
+                    removeAssetFromScanner(scanner);
                     break;
                 case "8":
                     sortAssetsByName();
