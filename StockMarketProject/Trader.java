@@ -53,7 +53,7 @@ public class Trader {
     }
 
     public double getManagementPrice() {
-        return managementPrice;
+        return managementPrice*portfolio.getBalanceInMarket();
     }
 
     public void setManagementPrice(double managementPrice) {

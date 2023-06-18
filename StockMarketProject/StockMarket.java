@@ -19,21 +19,39 @@ public class StockMarket {
         this.assets = new ArrayList<Asset>();
         this.traders = new ArrayList<Trader>();
         this.balance = 0;
+        this.managementPrice = 0.01;
+        this.profitForTax = 0.25;
     }
 
     public void addTrader(Trader trader) {
+        if (traders.contains(trader)) {
+            System.out.println("Trader already exists");
+            return;
+        }
         traders.add(trader);
     }
     public void removeTrader(Trader trader) {
+        if (!traders.contains(trader)) {
+            System.out.println("Trader doesn't exist");
+            return;
+        }
         traders.remove(trader);
     }
     public ArrayList<Trader> getTraders() {
         return this.traders;
     }
     public void addAsset(Asset asset) {
+        if (assets.contains(asset)) {
+            System.out.println("Asset already exists");
+            return;
+        }
         assets.add(asset);
     }
     public void removeAsset(Asset asset) {
+        if (!assets.contains(asset)) {
+            System.out.println("Asset doesn't exist");
+            return;
+        }
         assets.remove(asset);
     }
     public ArrayList<Asset> getAssets() {
@@ -96,7 +114,7 @@ public class StockMarket {
 
         Trader trader = new Trader(username, password, managementPrice, profitForTax, this);
         addTrader(trader);
-        if (username.equals("admin")) {
+        if (username.toLowerCase().equals("admin")) {
             adminMenu(scanner, trader);
         } else {
             traderMenu(scanner, trader);
@@ -126,7 +144,7 @@ public class StockMarket {
     private void adminMenu(Scanner scanner, Trader trader) {
         System.out.println("Welcome admin!");
         System.out.println("Please choose one of the following options:");
-        System.out.println("1. Update prices");
+        System.out.println("1. Update prices"); // delete
         System.out.println("2. Take management fee");
         System.out.println("3. search for a trader");
         System.out.println("4. search for an asset");
@@ -136,13 +154,14 @@ public class StockMarket {
         System.out.println("8. Sort assets by name");
         System.out.println("9. Sort assets by price");
         System.out.println("10. Sort assets by amount");
+//        add sort for Trader
         System.out.println("11. Load assets from file");
         System.out.println("12. Sign out");
         String choice = scanner.nextLine();
         while (!choice.equals("12")){
             switch (choice) {
                 case "1":
-                    updatePrices();
+                    updatePrices(); // delete
                     break;
                 case "2":
                     takeManagementPrice();

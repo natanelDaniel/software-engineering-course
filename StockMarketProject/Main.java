@@ -9,8 +9,10 @@ public class Main {
         public static void main(String[] args) {
             // TODO Auto-generated method stub
             StockMarket stockMarket = new StockMarket();
-            String AssetsPath = "Ex2\\Tests\\assets.txt";
+            String AssetsPath = "StockMarketProject\\Tests\\assets.txt";
             stockMarket.LoadAssetsFromFile(AssetsPath);
+            String TradersPath = "StockMarketProject\\Tests\\traders.txt";
+            stockMarket.LoadTradersFromFile(TradersPath);
 
             String test1 = "StockMarketProject\\Tests\\StockMarketTest.txt";
             Boolean fromFile = true;
