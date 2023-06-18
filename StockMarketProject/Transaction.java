@@ -5,13 +5,13 @@ import java.util.Date;
 public class Transaction {
 	private static int counter = 0;  // Static counter to generate unique IDs
 	private Integer _id;
-    private Trader _buyingTrader;
-    private Trader _sellingTrader;
-    private Asset _asset;
-    private Boolean _type;
-    private Double _price;
-    private Double _amount;
-    private Date _date;
+	private Trader _buyingTrader;
+	private Trader _sellingTrader;
+	private Asset _asset;
+	private Boolean _type;
+	private Double _price;
+	private Double _amount;
+	private Date _date;
 
     public Transaction() {
         this._id = 0;
