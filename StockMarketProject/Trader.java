@@ -36,7 +36,7 @@ public class Trader {
         this.username = username;
     }
 
-    private String getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -182,7 +182,7 @@ public class Trader {
         }
     }
 
-    // Method to sell a Asset
+    // Method to sell an Asset
     public boolean sellAsset(Asset asset, int amount, double pricePerUnit, String mode){
         if (amount <= 0) {
             System.out.println("You can't sell a negative amount of assets");

@@ -141,6 +141,10 @@ public abstract class Asset {
         }
     }
 
+    public void plot() {
+//        To Do - plot the graph
+    }
+
 
 //    @Override
 //    public boolean equals(Object obj) {
