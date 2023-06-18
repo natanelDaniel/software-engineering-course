@@ -28,16 +28,4 @@ public class Main {
             }
             System.out.println("Bye Bye");
         }
-
-
-
-
-}
-
-        public static void printMainMenu() {
-            System.out.println("Please choose one of the following options:");
-            System.out.println("1. Create a new trader");
-            System.out.println("2. Login");
-            System.out.println("3. Exit");
-        }
 }

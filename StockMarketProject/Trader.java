@@ -36,7 +36,7 @@ public class Trader {
         this.username = username;
     }
 
-    private String getPassword() {
+    public String getPassword() {
         return password;
     }
 

@@ -10,7 +10,7 @@ public class Transaction {
 	private Asset _asset;
 	private Boolean _type;
 	private Double _price;
-	private Double _amount;
+	private int _amount;
 	private Date _date;
 
     public Transaction() {
@@ -20,11 +20,11 @@ public class Transaction {
         this._asset = null;
         this._type = false;
         this._price = 0.0;
-        this._amount = 0.0;
+        this._amount = 0;
         this._date = null;
     }
     
-    public Transaction(Trader sellingTrader, Asset asset, String type, Double price, Double amount, Date date) {
+    public Transaction(Trader sellingTrader, Asset asset, String type, Double price, int amount, Date date) {
         this._id = generateID();
         this._sellingTrader = sellingTrader;
         this._buyingTrader = null;  // You can set the buying trader later if needed
