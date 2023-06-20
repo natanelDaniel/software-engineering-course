@@ -1,5 +1,7 @@
 package StockMarketProject;
 
+import java.util.Random;
+
 // class Stock inherits from Asset
 
 public class Stock extends Asset implements IUpdatable {
@@ -30,7 +32,9 @@ public class Stock extends Asset implements IUpdatable {
 
     @Override
     public void update() {
-        double newPrice = getPrice() + (getPrice() * (getMean() / 100));
+        // randomize the change in the price of the stock by the mean and std in normal distribution
+        double change = new Random().nextGaussian() * getStd() + getMean();
+        double newPrice = getPrice() + (getPrice() * (change / 100));
         setPrice(newPrice);
     }
 }

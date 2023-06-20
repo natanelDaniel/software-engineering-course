@@ -37,6 +37,10 @@ public abstract class Asset {
         return _mean;
     }
 
+    public double getStd() {
+        return _std;
+    }
+
     public int getAvailableAmount() {
         return _availableAmount;
     }

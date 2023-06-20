@@ -1,5 +1,7 @@
 package StockMarketProject;
 
+import java.util.Random;
+
 public class VirtualCurrency extends Asset implements IUpdatable{
 
     private String currencyName;
@@ -26,7 +28,8 @@ public class VirtualCurrency extends Asset implements IUpdatable{
 
         @Override
         public void update() {
-            double newPrice = getPrice() + (getPrice() * (getMean() / 100));
+            double change = new Random().nextGaussian() * getStd() + getMean();
+            double newPrice = getPrice() + (getPrice() * (change / 100));
             setPrice(newPrice);
         }
 }
