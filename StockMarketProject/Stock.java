@@ -8,8 +8,9 @@ public class Stock extends Asset implements IUpdatable {
 
     private String companyName;
 
-    public Stock(String symbol, double price, double mean, double std, int availableAmount) {
+    public Stock(String symbol, double price, double mean, double std, int availableAmount, String companyName) {
         super(symbol, price, mean, std, availableAmount);
+        this.companyName = companyName;
     }
 
     public void setCompanyName(String companyName) {

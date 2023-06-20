@@ -1,8 +1,6 @@
 package StockMarketProject;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 
 public class StockMarket {
     private ArrayList<Asset> assets;
@@ -40,14 +38,45 @@ public class StockMarket {
     public ArrayList<Trader> getTraders() {
         return this.traders;
     }
-    public void addAsset(Asset asset) {
-        if (assets.contains(asset)) {
+    public void addAsset(Scanner scanner) {
+        System.out.println("Please enter the symbol of the asset you want to add:");
+        String symbol = scanner.nextLine();
+        Asset asset = searchAsset(symbol);
+        if (assets.contains(scanner)) {
             System.out.println("Asset already exists");
             return;
         }
-        assets.add(asset);
+        else {
+            System.out.println("Please enter the price of the asset:");
+            double price = scanner.nextDouble();
+            System.out.println("Please enter the mean of the asset:");
+            double mean = scanner.nextDouble();
+            System.out.println("Please enter the std of the asset:");
+            double std = scanner.nextDouble();
+            System.out.println("Please enter the available amount of the asset:");
+            int availableAmount = scanner.nextInt();
+            System.out.println("Is the asset a stock or a currency?");
+            String type = scanner.nextLine();
+            if (type.equals("stock")) {
+                System.out.println("Please enter the company name of the asset:");
+                String companyName = scanner.nextLine();
+                asset = new Stock(symbol, price, mean, std, availableAmount, companyName);
+            }
+            else if (type.equals("currency")) {
+                System.out.println("Please enter the currency name of the asset:");
+                String currencyName = scanner.nextLine();
+                asset = new VirtualCurrency(symbol, price, mean, std, availableAmount, currencyName);
+            }
+            else {
+                System.out.println("Invalid input");
+                return;
+            }
+        }
     }
-    public void removeAsset(Asset asset) {
+    public void removeAsset(Scanner scanner) {
+        System.out.println("Please enter the symbol of the asset you want to remove:");
+        String symbol = scanner.nextLine();
+        Asset asset = searchAsset(symbol);
         if (!assets.contains(asset)) {
             System.out.println("Asset doesn't exist");
             return;
@@ -323,6 +352,46 @@ public class StockMarket {
         trader.deposit(amount);
     }
 
+    private boolean sellAsset (Scanner scanner, Trader trader) {
+        System.out.println("Please enter the Symbol of the asset you want to sell:");
+        String symbol = scanner.nextLine();
+        if (searchAsset(symbol) == null) {
+            System.out.println("Asset not found");
+            return false;
+        } else {
+            System.out.println("Please enter the mode of sale:");
+            System.out.println("1. Market");
+            System.out.println("2. Limit");
+
+            String mode = scanner.nextLine();
+            while (!mode.equals("1") && !mode.equals("2")) {
+                System.out.println("Invalid input");
+                System.out.println("Please enter the mode of sale:");
+                System.out.println("1. Market");
+                System.out.println("2. Limit");
+                mode = scanner.nextLine();
+            }
+            if (mode.equals("1")) {
+                System.out.println("Please enter the Total amount you want to sell:");
+                int amount = scanner.nextInt();
+                scanner.nextLine();
+                Asset asset = searchAsset(symbol);
+                trader.sellAsset(asset, amount, asset.getPrice(), "market");
+                return true;
+            } else {
+                System.out.println("Please enter the amount you want to sell:");
+                int amount = scanner.nextInt();
+                scanner.nextLine();
+                System.out.println("Please enter the limit price:");
+                double limitPrice = scanner.nextDouble();
+                scanner.nextLine();
+                Asset asset = searchAsset(symbol);
+                trader.sellAsset(asset, amount, limitPrice, "limit");
+                return true;
+            }
+        }
+    }
+
     private void plotAsset(Scanner scanner) {
         System.out.println("Please enter the name of the asset you want to plot:");
         String name = scanner.nextLine();
@@ -352,6 +421,33 @@ public class StockMarket {
             }
         }
         return null;
+    }
+
+    private void sortAssetsByPrice() {
+        Collections.sort(assets, new Comparator<Asset>() {
+            @Override
+            public int compare(Asset o1, Asset o2) {
+                return Double.compare(o1.getPrice(), o2.getPrice());
+            }
+        });
+    }
+
+    private void sortAssetsByName() {
+        Collections.sort(assets, new Comparator<Asset>() {
+            @Override
+            public int compare(Asset o1, Asset o2) {
+                return o1.getSymbol().compareTo(o2.getSymbol());
+            }
+        });
+    }
+
+    private void sortAssetsByAmount() {
+        Collections.sort(assets, new Comparator<Asset>() {
+            @Override
+            public int compare(Asset o1, Asset o2) {
+                return Integer.compare(o1.getAvailableAmount(), o2.getAvailableAmount());
+            }
+        });
     }
 
     private void withdrawMoney(Scanner scanner, Trader trader) {

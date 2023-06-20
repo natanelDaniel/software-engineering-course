@@ -5,8 +5,9 @@ import java.util.Random;
 public class VirtualCurrency extends Asset implements IUpdatable{
 
     private String currencyName;
-        public VirtualCurrency(String symbol, double price, double mean, double std, int availableAmount) {
+        public VirtualCurrency(String symbol, double price, double mean, double std, int availableAmount, String currencyName) {
             super(symbol, price, mean, std, availableAmount);
+            this.currencyName = currencyName;
         }
 
         public void setCurrencyName(String currencyName) {
