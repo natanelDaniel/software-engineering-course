@@ -1,5 +1,9 @@
 package StockMarketProject;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class StockMarket {
@@ -28,6 +32,7 @@ public class StockMarket {
         }
         traders.add(trader);
     }
+
     public void removeTrader(Trader trader) {
         if (!traders.contains(trader)) {
             System.out.println("Trader doesn't exist");
@@ -35,9 +40,11 @@ public class StockMarket {
         }
         traders.remove(trader);
     }
+
     public ArrayList<Trader> getTraders() {
         return this.traders;
     }
+
     public void addAsset(Scanner scanner) {
         System.out.println("Please enter the symbol of the asset you want to add:");
         String symbol = scanner.nextLine();
@@ -45,8 +52,7 @@ public class StockMarket {
         if (assets.contains(scanner)) {
             System.out.println("Asset already exists");
             return;
-        }
-        else {
+        } else {
             System.out.println("Please enter the price of the asset:");
             double price = scanner.nextDouble();
             System.out.println("Please enter the mean of the asset:");
@@ -61,18 +67,17 @@ public class StockMarket {
                 System.out.println("Please enter the company name of the asset:");
                 String companyName = scanner.nextLine();
                 asset = new Stock(symbol, price, mean, std, availableAmount, companyName);
-            }
-            else if (type.equals("currency")) {
+            } else if (type.equals("currency")) {
                 System.out.println("Please enter the currency name of the asset:");
                 String currencyName = scanner.nextLine();
                 asset = new VirtualCurrency(symbol, price, mean, std, availableAmount, currencyName);
-            }
-            else {
+            } else {
                 System.out.println("Invalid input");
                 return;
             }
         }
     }
+
     public void removeAsset(Scanner scanner) {
         System.out.println("Please enter the symbol of the asset you want to remove:");
         String symbol = scanner.nextLine();
@@ -83,6 +88,7 @@ public class StockMarket {
         }
         assets.remove(asset);
     }
+
     public ArrayList<Asset> getAssets() {
         return this.assets;
     }
@@ -94,6 +100,7 @@ public class StockMarket {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+
     public void updateBalance(double amount) {
         setBalance(getBalance() + amount);
     }
@@ -126,13 +133,13 @@ public class StockMarket {
             choice = scanner.nextLine();
         }
     }
+
     public void signUp(Scanner scanner) {
         System.out.println("Please enter your username:");
         String username = scanner.nextLine();
         System.out.println("Please enter your password:");
         String password = scanner.nextLine();
-        while (! VerifyPassword(password))
-        {
+        while (!VerifyPassword(password)) {
             System.out.println("Invalid password, password must contain at least 8 characters, " +
                     " at least one digit, at least one lower case letter, at least one upper case " +
                     " letter and at least one special character");
@@ -187,7 +194,7 @@ public class StockMarket {
         System.out.println("11. Load assets from file");
         System.out.println("12. Sign out");
         String choice = scanner.nextLine();
-        while (!choice.equals("12")){
+        while (!choice.equals("12")) {
             switch (choice) {
                 case "1":
                     updatePrices(); // delete
@@ -267,7 +274,7 @@ public class StockMarket {
         System.out.println("9. Remove account");
         System.out.println("10. Sign out");
         String choice = scanner.nextLine();
-        while (!choice.equals("10")){
+        while (!choice.equals("10")) {
             switch (choice) {
                 case "1":
                     searchForAsset(scanner);
@@ -352,7 +359,7 @@ public class StockMarket {
         trader.deposit(amount);
     }
 
-    private boolean sellAsset (Scanner scanner, Trader trader) {
+    private boolean sellAsset(Scanner scanner, Trader trader) {
         System.out.println("Please enter the Symbol of the asset you want to sell:");
         String symbol = scanner.nextLine();
         if (searchAsset(symbol) == null) {
@@ -484,7 +491,7 @@ public class StockMarket {
         }
     }
 
-    public void signIn(Scanner scanner){
+    public void signIn(Scanner scanner) {
         System.out.println("Please enter your username:");
         String username = scanner.nextLine();
         System.out.println("Please enter your password:");
@@ -513,8 +520,11 @@ public class StockMarket {
     }
 
     public void updatePrices() {
-        // TODO implement here
+        for (Asset asset : assets) {
+            asset.update();
+        }
     }
+
     public void takeManagementPrice() {
         for (Trader trader : traders) {
             this.balance += trader.getManagementPrice();
@@ -522,6 +532,26 @@ public class StockMarket {
     }
 
     public void LoadAssetsFromFile(String filePath) {
-//        TODO: read from file
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line = reader.readLine();
+            while (line != null) {
+                String[] assetInfo = line.split(",");
+                String symbol = assetInfo[0];
+                String name = assetInfo[1];
+                double price = Double.parseDouble(assetInfo[2]);
+                double mean = Double.parseDouble(assetInfo[3]);
+                double std = Double.parseDouble(assetInfo[4]);
+                int amount = Integer.parseInt(assetInfo[5]);
+                String type = assetInfo[6];
+                if (type.equals("Stock")) {
+                    assets.add(new Stock(symbol, price, mean, std, amount, name));
+                } else if (type.equals("Currency")) {
+                    assets.add(new VirtualCurrency(symbol, price, mean, std, amount, name));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

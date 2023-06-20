@@ -3,7 +3,7 @@ package StockMarketProject;
 
 import java.util.ArrayList;
 
-public abstract class Asset {
+public abstract class Asset implements IUpdatable {
 
     private String _symbol;
     private double _price;
@@ -151,6 +151,9 @@ public abstract class Asset {
 
     public void plot() {
 //        To Do - plot the graph
+    }
+
+    public void update() {
     }
 
 
