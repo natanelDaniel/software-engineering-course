@@ -33,6 +33,10 @@ public abstract class Asset {
         return _price;
     }
 
+    public double getMean() {
+        return _mean;
+    }
+
     public int getAvailableAmount() {
         return _availableAmount;
     }
