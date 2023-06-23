@@ -1,16 +1,12 @@
-package StockMarketProjectCopy;
+package StockMarketProject;
 
-import org.knowm.xchart.CategoryChart;
-import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.SwingWrapper;
-
-import javax.swing.*;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class StockMarket extends Thread{
+public class StockMarket {
     private ArrayList<Asset> assets;
     private ArrayList<Trader> traders;
 
@@ -49,6 +45,50 @@ public class StockMarket extends Thread{
         return this.traders;
     }
 
+    public void addAsset(Scanner scanner) {
+        System.out.println("Please enter the symbol of the asset you want to add:");
+        String symbol = scanner.nextLine();
+        Asset asset = searchAsset(symbol);
+        if (assets.contains(scanner)) {
+            System.out.println("Asset already exists");
+            return;
+        } else {
+            System.out.println("Please enter the price of the asset:");
+            double price = scanner.nextDouble();
+            System.out.println("Please enter the mean of the asset:");
+            double mean = scanner.nextDouble();
+            System.out.println("Please enter the std of the asset:");
+            double std = scanner.nextDouble();
+            System.out.println("Please enter the available amount of the asset:");
+            int availableAmount = scanner.nextInt();
+            System.out.println("Is the asset a stock or a currency?");
+            String type = scanner.nextLine();
+            if (type.equals("stock")) {
+                System.out.println("Please enter the company name of the asset:");
+                String companyName = scanner.nextLine();
+                asset = new Stock(symbol, price, mean, std, availableAmount, companyName);
+            } else if (type.equals("currency")) {
+                System.out.println("Please enter the currency name of the asset:");
+                String currencyName = scanner.nextLine();
+                asset = new VirtualCurrency(symbol, price, mean, std, availableAmount, currencyName);
+            } else {
+                System.out.println("Invalid input");
+                return;
+            }
+        }
+    }
+
+    public void removeAsset(Scanner scanner) {
+        System.out.println("Please enter the symbol of the asset you want to remove:");
+        String symbol = scanner.nextLine();
+        Asset asset = searchAsset(symbol);
+        if (!assets.contains(asset)) {
+            System.out.println("Asset doesn't exist");
+            return;
+        }
+        assets.remove(asset);
+    }
+
     public ArrayList<Asset> getAssets() {
         return this.assets;
     }
@@ -74,7 +114,6 @@ public class StockMarket extends Thread{
     }
 
     public void menu(Scanner scanner) {
-        this.start();
         printMainMenu();
         String choice = scanner.nextLine();
 //        here we should take thread to update the stock market prices
@@ -98,10 +137,6 @@ public class StockMarket extends Thread{
     public void signUp(Scanner scanner) {
         System.out.println("Please enter your username:");
         String username = scanner.nextLine();
-        if (traders.contains(username) || username.toLowerCase().equals("admin")) {
-            System.out.println("Username already exists");
-            return;
-        }
         System.out.println("Please enter your password:");
         String password = scanner.nextLine();
         while (!VerifyPassword(password)) {
@@ -116,7 +151,7 @@ public class StockMarket extends Thread{
         Trader trader = new Trader(username, password, managementPrice, profitForTax, this);
         addTrader(trader);
         if (username.toLowerCase().equals("admin")) {
-            adminMenu(scanner);
+            adminMenu(scanner, trader);
         } else {
             traderMenu(scanner, trader);
         }
@@ -141,83 +176,57 @@ public class StockMarket extends Thread{
         }
         return hasDigit && hasLowerCase && hasUpperCase && hasSpecial;
     }
-    public void printAdminManu(){
+
+    private void adminMenu(Scanner scanner, Trader trader) {
         System.out.println("Welcome admin!");
         System.out.println("Please choose one of the following options:");
-        System.out.println("1. Take management fee");
-        System.out.println("2. search for a trader");
-        System.out.println("3. search for an asset");
-        System.out.println("4. plot Asset");
-        System.out.println("5. Add asset");
-        System.out.println("6. Remove asset");
-        System.out.println("7. Sort assets by name");
-        System.out.println("8. Sort assets by price");
-        System.out.println("9. Sort assets by amount");
-        System.out.println("10. Sort traders by name");
-        System.out.println("11. Sort traders by balance");
-        System.out.println("12. plot Assets by price");
-        System.out.println("13. plot Assets by amount");
-        System.out.println("14. plot Traders by balance");
-        System.out.println("15. plot Traders by Balance in Market");
-        System.out.println("16. Load assets from file");
-        System.out.println("17. Sign out");
-    }
-    private void adminMenu(Scanner scanner) {
-        printAdminManu();
+        System.out.println("1. Update prices"); // delete
+        System.out.println("2. Take management fee");
+        System.out.println("3. search for a trader");
+        System.out.println("4. search for an asset");
+        System.out.println("5. plot Asset");
+        System.out.println("6. Add asset");
+        System.out.println("7. Remove asset");
+        System.out.println("8. Sort assets by name");
+        System.out.println("9. Sort assets by price");
+        System.out.println("10. Sort assets by amount");
+//        add sort for Trader
+        System.out.println("11. Load assets from file");
+        System.out.println("12. Sign out");
         String choice = scanner.nextLine();
-        while (!choice.equals("17")) {
+        while (!choice.equals("12")) {
             switch (choice) {
                 case "1":
-                    takeManagementPrice();
+                    updatePrices(); // delete
                     break;
                 case "2":
-                    searchForTrader(scanner);
+                    takeManagementPrice();
                     break;
                 case "3":
-                    searchForAsset(scanner);
+                    searchForTrader(scanner);
                     break;
                 case "4":
-                    plotAsset(scanner);
+                    searchForAsset(scanner);
                     break;
                 case "5":
-                    addAssetFromScanner(scanner);
+                    plotAsset(scanner);
                     break;
                 case "6":
-                    removeAssetFromScanner(scanner);
+                    addAsset(scanner);
                     break;
                 case "7":
-                    sortAssetsByName();
-                    printAssets();
+                    removeAsset(scanner);
                     break;
                 case "8":
-                    sortAssetsByPrice();
-                    printAssets();
+                    sortAssetsByName();
                     break;
                 case "9":
-                    sortAssetsByAmount();
-                    printAssets();
+                    sortAssetsByPrice();
                     break;
                 case "10":
-                    sortTradersByName();
-                    printTraders();
+                    sortAssetsByAmount();
                     break;
                 case "11":
-                    sortTradersByBalance();
-                    printTraders();
-                    break;
-                case "12":
-                    plotAssetsByPrice();
-                    break;
-                case "13":
-                    plotAssetsByAmount();
-                    break;
-                case "14":
-                    plotTradersByBalance();
-                    break;
-                case "15":
-                    plotTradersByBalanceInMarket();
-                    break;
-                case "16":
                     System.out.println("Please enter the file path:");
                     String filePath = scanner.nextLine();
                     LoadAssetsFromFile(filePath);
@@ -226,116 +235,7 @@ public class StockMarket extends Thread{
                     System.out.println("Invalid input");
                     break;
             }
-            printAdminManu();
-            choice = scanner.nextLine();
-        }
-    }
-
-    private void plotAssetsByAmount() {
-        assets.sort(Comparator.comparing(Asset::getAvailableAmount));
-        CategoryChart chart = new CategoryChartBuilder().width(800).height(600).title("Portfolio").xAxisTitle("Asset").yAxisTitle("Value").build();
-        List<String> assetNames = new ArrayList<>();
-        List<Integer> assetValues = new ArrayList<>();
-        for (Asset asset : assets) {
-            assetNames.add(asset.getSymbol());
-            assetValues.add(asset.getAvailableAmount());
-        }
-        chart.addSeries("Assets", assetNames, assetValues);
-        JFrame frame = new SwingWrapper(chart).displayChart();
-        SwingUtilities.invokeLater(
-                ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
-        );
-    }
-
-    private void sortTradersByBalance() {
-        traders.sort(Comparator.comparing(Trader::getBalance));
-        printTraders();
-    }
-
-    private void plotTradersByBalance() {
-        traders.sort(Comparator.comparing(Trader::getBalance));
-        CategoryChart chart = new CategoryChartBuilder().width(800).height(600).title("Portfolio").xAxisTitle("Asset").yAxisTitle("Value").build();
-        List<String> traderNames = new ArrayList<>();
-        List<Double> traderValues = new ArrayList<>();
-        for (Trader trader : traders) {
-            traderNames.add(trader.getUsername());
-            traderValues.add(trader.getBalance());
-        }
-        chart.addSeries("Traders", traderNames, traderValues);
-        JFrame frame = new SwingWrapper(chart).displayChart();
-        SwingUtilities.invokeLater(
-                ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
-        );
-    }
-
-    private void plotTradersByBalanceInMarket() {
-        traders.sort(Comparator.comparing(Trader::getBalanceInMarket));
-        CategoryChart chart = new CategoryChartBuilder().width(800).height(600).title("Portfolio").xAxisTitle("Asset").yAxisTitle("Value").build();
-        List<String> traderNames = new ArrayList<>();
-        List<Double> traderValues = new ArrayList<>();
-        for (Trader trader : traders) {
-            traderNames.add(trader.getUsername());
-            traderValues.add(trader.getBalanceInMarket());
-        }
-        chart.addSeries("Traders", traderNames, traderValues);
-        JFrame frame = new SwingWrapper(chart).displayChart();
-        SwingUtilities.invokeLater(
-                ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
-        );
-    }
-
-    private void printTraders() {
-        for (Trader trader : traders) {
-            System.out.println(trader);
-        }
-    }
-
-    private void sortTradersByName() {
-        traders.sort(Comparator.comparing(Trader::getUsername));
-    }
-
-    private void removeAssetFromScanner(Scanner scanner) {
-        System.out.println("Please enter the symbol of the asset you want to remove:");
-        String symbol = scanner.nextLine();
-        Asset asset = searchAsset(symbol);
-        if (!assets.contains(asset)) {
-            System.out.println("Asset doesn't exist");
-            return;
-        }
-        assets.remove(asset);
-    }
-
-    private void addAssetFromScanner(Scanner scanner) {
-        System.out.println("Stock or Crypto? [S/C]");
-        String choice = scanner.nextLine();
-        if (! (choice.toLowerCase().equals("s") || choice.toLowerCase().equals("c"))) {
-            System.out.println("Invalid input");
-        }
-        System.out.println("Please enter the symbol of the asset you want to add:");
-        String symbol = scanner.nextLine();
-        if (searchAsset(symbol) != null) {
-            System.out.println("Asset with this symbol already exists");
-            return;
-        }
-        System.out.println("Please enter the price of the asset you want to add:");
-        double price = scanner.nextDouble();
-        System.out.println("Please enter the amount of the asset you want to add:");
-        int amount = scanner.nextInt();
-        System.out.println("Please enter mean of the asset you want to add:");
-        double mean = scanner.nextDouble();
-        System.out.println("Please enter the std of the asset you want to add:");
-        double std = scanner.nextDouble();
-        if (choice.toLowerCase().equals("s")) {
-            System.out.println("Please enter the company name of the stock you want to add:");
-            String name = scanner.nextLine();
-            scanner.nextLine();
-            Stock stock = new Stock(symbol, price, mean, std, amount, name);
-            this.assets.add(stock);
-        } else {
-            System.out.println("Please enter the currency name of the asset:");
-            String currencyName = scanner.nextLine();
-            VirtualCurrency vc = new VirtualCurrency(symbol, price, mean, std, amount, currencyName);
-            this.assets.add(vc);
+            adminMenu(scanner, trader);
         }
     }
 
@@ -359,7 +259,9 @@ public class StockMarket extends Thread{
         return null;
     }
 
-    private void printTraderManu(){
+
+    public void traderMenu(Scanner scanner, Trader trader) {
+        System.out.println("Welcome " + trader.getUsername() + "!");
         System.out.println("Please choose one of the following options:");
         System.out.println("1. Search for an asset");
         System.out.println("2. Plot asset");
@@ -367,18 +269,12 @@ public class StockMarket extends Thread{
         System.out.println("4. Sell asset");
         System.out.println("5. Print portfolio");
         System.out.println("6. Plot portfolio");
-        System.out.println("7. Plot portfolio Bar Chart");
-        System.out.println("8. Deposit money");
-        System.out.println("9. Withdraw money");
-        System.out.println("10. Remove account");
-        System.out.println("11. plot Assets by price");
-        System.out.println("12. Sign out");
-    }
-    public void traderMenu(Scanner scanner, Trader trader) {
-        System.out.println("Welcome " + trader.getUsername() + "!");
-        printTraderManu();
+        System.out.println("7. Deposit money");
+        System.out.println("8. Withdraw money");
+        System.out.println("9. Remove account");
+        System.out.println("10. Sign out");
         String choice = scanner.nextLine();
-        while (!choice.equals("12")) {
+        while (!choice.equals("10")) {
             switch (choice) {
                 case "1":
                     searchForAsset(scanner);
@@ -389,11 +285,9 @@ public class StockMarket extends Thread{
                 case "3":
                     System.out.println("Please enter the Symbol of the asset you want to buy:");
                     String symbol = scanner.nextLine();
-                    Asset asset = searchAsset(symbol);
-                    if (asset == null) {
+                    if (searchAsset(symbol) == null) {
                         System.out.println("Asset not found");
                     } else {
-                        System.out.println(asset);
                         System.out.println("Please enter the mode of purchase:");
                         System.out.println("1. Market");
                         System.out.println("2. Limit");
@@ -407,10 +301,11 @@ public class StockMarket extends Thread{
                             mode = scanner.nextLine();
                         }
                         if (mode.equals("1")) {
-                            System.out.println("Please enter the Total Money you want to spend:");
-                            int money = scanner.nextInt();
+                            System.out.println("Please enter the Total amount you want to buy:");
+                            int amount = scanner.nextInt();
                             scanner.nextLine();
-                            trader.buyAssetMarketMode(asset, money);
+                            Asset asset = searchAsset(symbol);
+                            trader.buyAsset(asset, amount, asset.getPrice(), "market");
                         } else {
                             System.out.println("Please enter the amount you want to buy:");
                             int amount = scanner.nextInt();
@@ -418,7 +313,8 @@ public class StockMarket extends Thread{
                             System.out.println("Please enter the limit price:");
                             double limitPrice = scanner.nextDouble();
                             scanner.nextLine();
-                            trader.buyAssetLimit(asset, amount, limitPrice, false, null);
+                            Asset asset = searchAsset(symbol);
+                            trader.buyAsset(asset, amount, limitPrice, "limit");
                         }
                     }
 
@@ -427,33 +323,30 @@ public class StockMarket extends Thread{
                     sellAsset(scanner, trader);
                     break;
                 case "5":
-                    trader.printPortfolio();
+                    printPortfolio(trader);
                     break;
                 case "6":
                     plotPortfolio(trader);
                     break;
                 case "7":
-                    trader.getPortfolio().plotPortfolioBarChart();
-                    break;
-                case "8":
                     depositMoney(scanner, trader);
                     break;
-                case "9":
+                case "8":
                     withdrawMoney(scanner, trader);
                     break;
-                case "10":
+                case "9":
                     removeAccount(scanner, trader);
-                    break;
-                case "11":
-                    plotAssetsByPrice();
                     break;
                 default:
                     System.out.println("Invalid input");
                     break;
             }
-            printTraderManu();
-            choice = scanner.nextLine();
+            traderMenu(scanner, trader);
         }
+    }
+
+    private void printPortfolio(Trader trader) {
+        System.out.println(trader.getPortfolio());
     }
 
     private void plotPortfolio(Trader trader) {
@@ -490,7 +383,7 @@ public class StockMarket extends Thread{
                 int amount = scanner.nextInt();
                 scanner.nextLine();
                 Asset asset = searchAsset(symbol);
-                trader.sellAsset(asset, amount, asset.getPrice(), "market", false, null);
+                trader.sellAsset(asset, amount, asset.getPrice(), "market");
                 return true;
             } else {
                 System.out.println("Please enter the amount you want to sell:");
@@ -500,14 +393,14 @@ public class StockMarket extends Thread{
                 double limitPrice = scanner.nextDouble();
                 scanner.nextLine();
                 Asset asset = searchAsset(symbol);
-                trader.sellAsset(asset, amount, limitPrice, "limit", false, null);
+                trader.sellAsset(asset, amount, limitPrice, "limit");
                 return true;
             }
         }
     }
 
     private void plotAsset(Scanner scanner) {
-        System.out.println("Please enter the symbol of the asset you want to plot:");
+        System.out.println("Please enter the name of the asset you want to plot:");
         String name = scanner.nextLine();
         Asset asset = searchAsset(name);
         if (asset == null) {
@@ -518,7 +411,7 @@ public class StockMarket extends Thread{
     }
 
     private void searchForAsset(Scanner scanner) {
-        System.out.println("Please enter the symbol of the asset you want to search for:");
+        System.out.println("Please enter the name of the asset you want to search for:");
         String name = scanner.nextLine();
         Asset asset = searchAsset(name);
         if (asset == null) {
@@ -553,12 +446,6 @@ public class StockMarket extends Thread{
                 return o1.getSymbol().compareTo(o2.getSymbol());
             }
         });
-    }
-
-    private void printAssets() {
-        for (Asset asset : assets) {
-            System.out.println(asset);
-        }
     }
 
     private void sortAssetsByAmount() {
@@ -615,7 +502,7 @@ public class StockMarket extends Thread{
             System.out.println("Invalid username or password");
         } else {
             if (username.equals("admin")) {
-                adminMenu(scanner);
+                adminMenu(scanner, trader);
             } else {
                 traderMenu(scanner, trader);
             }
@@ -632,37 +519,16 @@ public class StockMarket extends Thread{
         return null;
     }
 
-    public void run() {
-//        this is the update price method, it will be called every 1 seconds
-        while (true) {
-            updatePrice();
-            try {
-                Thread.sleep(1*1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void updatePrice() {
+    public void updatePrices() {
         for (Asset asset : assets) {
             asset.update();
-            for (Transaction transaction : asset.getBuyers()) {
-                Boolean isDone = transaction.Try();
-                if (isDone) {
-                    asset.getBuyers().remove(transaction);
-                }
-            }
         }
     }
 
     public void takeManagementPrice() {
-        Double managementPrice = 0.0;
         for (Trader trader : traders) {
-            managementPrice += trader.getManagementPrice();
+            this.balance += trader.getManagementPrice();
         }
-        System.out.println("The total management price is " + managementPrice);
-        this.balance += managementPrice;
     }
 
     public void LoadAssetsFromFile(String filePath) {
@@ -676,60 +542,16 @@ public class StockMarket extends Thread{
                 double price = Double.parseDouble(assetInfo[2]);
                 double mean = Double.parseDouble(assetInfo[3]);
                 double std = Double.parseDouble(assetInfo[4]);
-                Integer amount = Integer.parseInt(assetInfo[5]);
+                int amount = Integer.parseInt(assetInfo[5]);
                 String type = assetInfo[6];
-                if (type.equals("s")) {
+                if (type.equals("Stock")) {
                     assets.add(new Stock(symbol, price, mean, std, amount, name));
-                } else if (type.equals("c")) {
+                } else if (type.equals("Currency")) {
                     assets.add(new VirtualCurrency(symbol, price, mean, std, amount, name));
                 }
-                line = reader.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    public void LoadTradersFromFile(String tradersPath) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(tradersPath));
-            String line = reader.readLine();
-            while (line != null) {
-                String[] traderInfo = line.split(",");
-                String username = traderInfo[0];
-                String password = traderInfo[1];
-                traders.add(new Trader(username, password, this.getManagementPrice(), this.getProfitForTax(), this));
-                line = reader.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void plotAssetsByPrice() {
-        this.sortAssetsByPrice();
-        List<Double> prices = new ArrayList<>();
-        List<String> names = new ArrayList<>();
-        for (Asset asset : assets) {
-            prices.add(asset.getPrice());
-            names.add(asset.getSymbol());
-        }
-        CategoryChart chart = new CategoryChartBuilder().width(800).height(600).title("Portfolio").xAxisTitle("Asset").yAxisTitle("Value").build();
-        chart.addSeries("Assets", names, prices);
-        JFrame frame = new SwingWrapper(chart).displayChart();
-        SwingUtilities.invokeLater(
-                ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
-        );
-
-    }
-
-    private double getProfitForTax() {
-        return this.profitForTax;
-    }
-
-    private double getManagementPrice() {
-        return this.managementPrice;
-    }
-
-
 }
