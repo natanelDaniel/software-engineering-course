@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class Main {
 
         public static void main(String[] args) {
-            // TODO Auto-generated method stub
             StockMarket stockMarket = new StockMarket();
             String AssetsPath = "StockMarketProject\\Tests\\assets.txt";
             stockMarket.LoadAssetsFromFile(AssetsPath);
@@ -15,7 +14,7 @@ public class Main {
             stockMarket.LoadTradersFromFile(TradersPath);
 
             String test1 = "StockMarketProject\\Tests\\StockMarketTest.txt";
-            Boolean fromFile = true;
+            Boolean fromFile = false;
             Scanner scanner;
             if (fromFile) {
                 try {

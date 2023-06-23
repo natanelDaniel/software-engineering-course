@@ -86,121 +86,111 @@ public class Trader {
     // Methods
 
     // Method to buy a Asset
-
-    public boolean buyAsset(Asset asset, int amount, double pricePerUnit, String mode) {
+    public boolean buyAssetLimit(Asset asset, int amount, double pricePerUnit, boolean fromTransaction, Transaction transaction) {
         if (amount <= 0) {
-            System.out.println("You can't buy a negative amount of assets");
+            if (! fromTransaction) {
+                System.out.println("You can't buy a negative amount of assets");
+            }
             return false;
         }
         if (pricePerUnit <= 0) {
-            System.out.println("You can't buy an asset with a negative price");
+            if (! fromTransaction) {
+                System.out.println("You can't buy an asset with a negative price");
+            }
             return false;
         }
         if (amount * pricePerUnit  * (1  + this.getFee()) > balance) {
-            System.out.println("You don't have enough money to buy this asset");
+            if (! fromTransaction) {
+                System.out.println("You don't have enough money to buy this asset");
+            }
             return false;
         }
         if (asset.getPrice() == 0) {
-            System.out.println("This asset is not traded in the market");
+            if (! fromTransaction) {
+                System.out.println("The asset is not available");
+            }
             return false;
         }
-        if (mode.equals("market")) {
-            if (amount * asset.getPrice() * (1  + this.getFee()) > balance) {
-                System.out.println("You don't have enough money to buy this asset");
-                return false;
-            }
-            int availableAmount = asset.getAvailableAmount();
-            if (availableAmount <= 0) {
-                System.out.println("There 0 assets in the market");
-                Date date = new Date();
-                Transaction transaction = new Transaction(this, asset, "buy", pricePerUnit, amount, date);
-                asset.addBuyer(transaction);
-                return false;
-            }
-            if (availableAmount < amount) {
-                balance -= availableAmount * asset.getPrice() * (1  + this.getFee());
-                portfolio.addAsset(asset, availableAmount, asset.getPrice());
-                asset.updateAvailableAmount(0);
-
-                stockMarket.updateBalance(availableAmount * asset.getPrice()  * (1  + this.getFee()));
-
-                System.out.println("There are not enough assets in the market");
-                Date date = new Date();
-                Transaction transaction = new Transaction(this, asset, "buy", pricePerUnit, amount - availableAmount, date);
-                asset.addBuyer(transaction);
-                return true;
-            }
-            balance -= amount * asset.getPrice() * (1  + this.getFee());
-            portfolio.addAsset(asset, amount, asset.getPrice());
-            asset.updateAvailableAmount(availableAmount - amount);
-
-            stockMarket.updateBalance(amount * asset.getPrice()  * (1  + this.getFee()));
-
-            return true;
-        } else if (mode.equals("limit")) {
-            if (pricePerUnit < asset.getPrice()) {
-                System.out.println("The price you entered is lower than the market price, Add the Transaction to the waiting list");
+        if (pricePerUnit < asset.getPrice()) {
 //                 get the current date and time
+            if (! fromTransaction) {
                 Date date = new Date();
-                Transaction transaction = new Transaction(this, asset, "buy", pricePerUnit, amount, date);
-                asset.addBuyer(transaction);
-                return false;
+                Transaction transaction_ = new Transaction(this, asset, "buy", pricePerUnit, amount, date);
+                asset.addBuyer(transaction_);
+                System.out.println("The Transaction was added to the waiting list");
             }
-            int availableAmount = asset.getAvailableAmount();
-            if (availableAmount <= 0) {
-                System.out.println("There 0 assets in the market");
-                Date date = new Date();
-                Transaction transaction = new Transaction(this, asset, "buy", pricePerUnit, amount, date);
-                asset.addBuyer(transaction);
-                return false;
-            }
-            if (availableAmount < amount) {
-                balance -= availableAmount * asset.getPrice() * (1  + this.getFee());
-                portfolio.addAsset(asset, availableAmount, asset.getPrice());
-                asset.updateAvailableAmount(0);
-
-                stockMarket.updateBalance(availableAmount * asset.getPrice() * (1  + this.getFee()));
-
-                System.out.println("There are not enough assets in the market");
-                Date date = new Date();
-                Transaction transaction = new Transaction(this, asset, "buy", pricePerUnit, amount - availableAmount, date);
-                asset.addBuyer(transaction);
-                return true;
-            }
-            balance -= amount * asset.getPrice() * (1  + this.getFee());
-            portfolio.addAsset(asset, amount, asset.getPrice());
-
-            asset.updateAvailableAmount(availableAmount - amount);
-
-            stockMarket.updateBalance(amount * asset.getPrice() * (1  + this.getFee()));
-
-            return true;
-        }
-        else {
-            System.out.println("You entered an invalid mode");
             return false;
         }
+        int availableAmount = asset.getAvailableAmount();
+        if (availableAmount <= 0) {
+            if (! fromTransaction) {
+                System.out.println("The Transaction was added to the waiting list");
+                Date date = new Date();
+                Transaction transaction_ = new Transaction(this, asset, "buy", pricePerUnit, amount, date);
+                asset.addBuyer(transaction_);
+            }
+            return false;
+        }
+        if (availableAmount < amount) {
+            this.balance -= availableAmount * asset.getPrice() * (1  + this.getFee());
+            portfolio.addAsset(asset, availableAmount, asset.getPrice());
+            asset.updateAvailableAmount(0);
+
+            stockMarket.updateBalance(availableAmount * asset.getPrice() * (1  + this.getFee()));
+
+            if (! fromTransaction) {
+                System.out.println("The Transaction was added to the waiting list");
+                Date date = new Date();
+                Transaction transaction_ = new Transaction(this, asset, "buy", pricePerUnit, amount - availableAmount, date);
+                asset.addBuyer(transaction_);
+            }
+            else {
+                transaction.setAmount(amount - availableAmount);
+            }
+            return false;
+        }
+        this.balance -= amount * asset.getPrice() * (1  + this.getFee());
+        portfolio.addAsset(asset, amount, asset.getPrice());
+
+        asset.updateAvailableAmount(availableAmount - amount);
+
+        stockMarket.updateBalance(amount * asset.getPrice() * (1  + this.getFee()));
+        if (! fromTransaction) {
+            System.out.println("The Transaction was successful");
+        }
+        return true;
     }
 
     // Method to sell an Asset
-    public boolean sellAsset(Asset asset, int amount, double pricePerUnit, String mode){
+    public boolean sellAsset(Asset asset, int amount, double pricePerUnit, String mode, boolean fromTransaction, Transaction transaction) {
         if (amount <= 0) {
-            System.out.println("You can't sell a negative amount of assets");
+            if (! fromTransaction) {
+                System.out.println("You can't sell a negative amount of assets");
+            }
             return false;
         }
         if (pricePerUnit <= 0) {
-            System.out.println("You can't sell an asset with a negative price");
+            if (! fromTransaction) {
+                System.out.println("You can't sell an asset with a negative price");
+            }
             return false;
         }
         if (amount > portfolio.getAssetAmount(asset)) {
-            System.out.println("You don't have enough assets to sell");
+            if (! fromTransaction) {
+                System.out.println("You don't have enough assets to sell");
+            }
             return false;
         }
         if (asset.getPrice() == 0) {
-            System.out.println("This asset is not traded in the market");
+            if (! fromTransaction) {
+                System.out.println("The asset is not available");
+            }
             return false;
         }
         if (mode.equals("market")) {
+            System.out.println("You are selling " + amount + " " + asset.getSymbol() + " for " + asset.getPrice() + " each");
+            System.out.println("The Transaction was successful");
+
             balance += amount * asset.getPrice()  * (1  - this.getFee());
             portfolio.removeAsset(asset, amount, asset.getPrice());
             asset.updateAvailableAmount(asset.getAvailableAmount() + amount);
@@ -210,15 +200,19 @@ public class Trader {
 //            Tax part
             double tax = (asset.getPrice() - portfolio.getAveragePrice(asset) ) * amount * this.getTax();
             setProfitForTax(tax + getProfitForTax());
+            System.out.println("You are paying " + tax + " tax");
             return true;
         } else if (mode.equals("limit")) {
             if (pricePerUnit > asset.getPrice()) {
-                System.out.println("The price you entered is higher than the market price, Add the Transaction to the waiting list");
-                Date date = new Date();
-                Transaction transaction = new Transaction(this, asset, "sell", pricePerUnit, amount, date);
-                asset.addSeller(transaction);
+                if (! fromTransaction) {
+                    System.out.println("The price you entered is higher than the market price, Add the Transaction to the waiting list");
+                    Date date = new Date();
+                    Transaction transaction_ = new Transaction(this, asset, "sell", pricePerUnit, amount, date);
+                    asset.addSeller(transaction_);
+                }
                 return false;
             }
+            System.out.println("You are selling " + amount + " " + asset.getSymbol() + " for " + pricePerUnit + " each");
             balance += amount * asset.getPrice() * (1 - this.getFee());
             portfolio.removeAsset(asset, amount, asset.getPrice());
             asset.updateAvailableAmount(asset.getAvailableAmount() + amount);
@@ -227,11 +221,14 @@ public class Trader {
 
 //            Tax part
             double tax = (asset.getPrice() - portfolio.getAveragePrice(asset) ) * amount * this.getTax();
+            System.out.println("You are paying " + tax + " tax");
             setProfitForTax(tax + getProfitForTax());
             return true;
         }
         else {
-            System.out.println("You entered an invalid mode");
+            if (! fromTransaction) {
+                System.out.println("The mode you entered is not valid");
+            }
             return false;
         }
     }
@@ -242,7 +239,7 @@ public class Trader {
             System.out.println("You can't deposit a negative amount of money");
             return;
         }
-        balance += amount;
+        this.balance += amount;
     }
 
     public void withdraw(double amount) {
@@ -250,13 +247,13 @@ public class Trader {
             System.out.println("You can't withdraw a negative amount of money");
             return;
         }
-        if (amount > balance) {
+        if (amount > this.balance) {
             System.out.println("You don't have enough money to withdraw");
             return;
         }
-        balance -= amount;
+        this.balance -= amount;
         if (getProfitForTax() > 0){
-            balance -= getProfitForTax();
+            this.balance -= getProfitForTax();
             setProfitForTax(0);
         }
     }
@@ -267,10 +264,57 @@ public class Trader {
 
     public double giveManagementFee() {
         double fee = this.managementPrice * getBalanceInMarket();
-        balance -= fee;
+        this.balance -= fee;
         return fee;
     }
 
 
+    public void buyAssetMarketMode(Asset asset, int money) {
+        double balance = this.getBalance();
+        int amount = (int) (money / asset.getPrice());
+        if (asset.getPrice() == 0) {
+            System.out.println("This asset is not traded in the market");
+            return;
+        }
+        if (amount * asset.getPrice() * (1 + this.getFee()) > balance) {
+            System.out.println("You don't have enough money to buy this asset");
+            return;
+        }
+        Integer availableAmount = asset.getAvailableAmount();
+        System.out.println("You try to buy " + amount + " of " + asset.getSymbol());
+        if (amount > asset.getAvailableAmount()) {
+            System.out.println("There are not enough assets in the market, Buying the available amount");
+            System.out.println("You bought " + availableAmount + " of " + asset.getSymbol());
+            System.out.println("You paid " + availableAmount * asset.getPrice() * (1  + this.getFee()) + " for this transaction");
+            this.balance -= availableAmount * asset.getPrice() * (1  + this.getFee());
+            portfolio.addAsset(asset, availableAmount, asset.getPrice());
+            asset.updateAvailableAmount(0);
 
+            stockMarket.updateBalance(availableAmount * asset.getPrice() * (1  + this.getFee()));
+
+            System.out.println("There are not enough assets in the market");
+            Date date = new Date();
+            Transaction transaction = new Transaction(this, asset, "buy", asset.getPrice(), amount - availableAmount, date);
+            asset.addBuyer(transaction);
+        }
+        else {
+            this.balance -= amount * asset.getPrice() * (1  + this.getFee());
+            portfolio.addAsset(asset, amount, asset.getPrice());
+
+            asset.updateAvailableAmount(availableAmount - amount);
+
+            stockMarket.updateBalance(amount * asset.getPrice() * (1  + this.getFee()));
+            System.out.println("You bought " + amount + " of " + asset.getSymbol());
+            System.out.println("You paid " + amount * asset.getPrice() * (1  + this.getFee()) + " for this transaction");
+        }
+
+    }
+
+    public String toString() {
+        return "Name: " + this.getUsername() + " Balance: " + this.getBalance() + " Balance in Market: " + this.getBalanceInMarket();
+    }
+
+    public void printPortfolio() {
+        System.out.println(this.getPortfolio().toString());
+    }
 }

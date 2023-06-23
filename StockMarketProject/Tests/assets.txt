@@ -1,0 +1,57 @@
+GOOGL,Google,1200.0,0.015,0.17,1000,s
+AAPL,Apple Inc.,150.0,0.01,0.15,500,s
+AMZN,Amazon.com,3000.0,0.03,0.18,800,s
+TSLA,Tesla Inc.,650.0,0.02,0.12,700,s
+MSFT,Microsoft Corporation,250.0,0.01,0.16,1200,s
+BTC,Bitcoin,40000.0,0.03,0.21,200,c
+ETH,Ethereum,2500.0,0.02,0.14,500,c
+XRP,Ripple,1.0,0.03,0.3,1000,c
+LTC,Litecoin,150.0,0.05,0.2,200,c
+ADA,Cardano,1.5,0.03,0.05,500,c
+NFLX,Netflix,500.0,0.02,0.03,400,s
+FB,Facebook,350.0,0.04,0.03,600,s
+BABA,Alibaba Group,200.0,0.03,0.09,900,s
+NVDA,NVIDIA Corporation,700.0,0.03,0.05,300,s
+PYPL,PayPal Holdings,250.0,-0.02,0.03,800,s
+XOM,Exxon Mobil Corporation,60.0,-0.03,0.02,1500,s
+INTC,Intel Corporation,50.0,-0.01,0.07,2000,s
+SQ,Square,200.0,-0.06,0.1,600,s
+UBER,Uber Technologies,50.0,0.01,0.07,1200,s
+NKE,Nike,150.0,-0.04,0.03,500,s
+GOLD,Barrick Gold Corporation,20.0,0.01,0.071,2500,s
+XAU,Gold,1800.0,0.01,0.02,100,c
+DOGE,Dogecoin,0.3,0.1,0.1,5000,c
+SOL,Solana,150.0,0.01,0.1,100,c
+LINK,Chainlink,30.0,-0.03,0.1,1000,c
+BNB,Binance Coin,300.0,0.02,0.1,200,c
+GM,General Motors Company,60.0,0.1,0.02,1500,s
+WMT,Walmart Inc.,140.0,0.04,0.03,700,s
+JPM,JPMorgan Chase & Co.,150.0,0.05,0.13,800,s
+CVS,CVS Health Corporation,70.0,0.04,0.13,1000,s
+BAC,Bank of America Corporation,40.0,0.113,0.02,1200,s
+TWTR,Twitter,60.0,0.02,0.12,900,s
+V,Visa Inc.,200.0,0.04,0.11,300,s
+GS,The Goldman Sachs Group Inc.,350.0,0.06,0.02,600,s
+AMD,Advanced Micro Devices Inc.,100.0,0.02,0.01,800,s
+GOOG,Alphabet Inc.,2000.0,0.01,0.04,400,s
+JNJ,Johnson & Johnson,150.0,0.03,0.02,500,s
+PFE,Pfizer Inc.,40.0,0.02,0.05,1000,s
+PG,The Procter & Gamble Company,130.0,0.03,0.04,600,s
+MRK,Merck & Co. Inc.,80.0,-0.04,0.1,800,s
+VZ,Verizon Communications Inc.,60.0,0.03,0.02,1000,s
+T,AT&T Inc.,30.0,-0.01,0.01,1500,s
+CMCSA,Comcast Corporation,50.0,-0.13,0.122,1200,s
+ABT,Abbott Laboratories,120.0,-0.04,0.03,400,s
+MO,Altria Group Inc.,50.0,0.001,0.01,800,s
+PBR,Petróleo Brasileiro S.A.,10.0,-0.01,0.01,2000,s
+GE,General Electric Company,10.0,0.01,0.03,2500,s
+XOM,Exxon Mobil Corporation,60.0,0.03,0.02,1500,s
+MCD,McDonald's Corporation,250.0,0.04,0.03,600,s
+BMY,Bristol-Myers Squibb Company,60.0,0.112,0.02,800,s
+KO,The Coca-Cola Company,50.0,-0.02,0.01,1000,s
+PEP,PepsiCo Inc.,150.0,-0.03,0.02,1200,s
+UNH,UnitedHealth Group Incorporated,400.0,0.05,0.03,500,s
+SPOT,Spotify Technology S.A.,250.0,-0.06,0.5,700,s
+INTU,Intuit Inc.,400.0,0.07,0.3,1000,s
+CRM,Salesforce.com Inc.,250.0,0.01,0.06,1200,s
+ZM,Zoom Video Communications Inc.,300.0,0.09,0.07,1500,s

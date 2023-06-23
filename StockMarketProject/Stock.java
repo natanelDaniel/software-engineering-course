@@ -1,5 +1,6 @@
 package StockMarketProject;
 
+import java.util.Calendar;
 import java.util.Random;
 
 // class Stock inherits from Asset
@@ -24,10 +25,7 @@ public class Stock extends Asset implements IUpdatable {
     @Override
     public String toString() {
         return "Stock{" + "companyName=" + companyName
-                + ", symbol=" + getSymbol()
-                + ", price=" + getPrice()
-                + ", availableAmount=" + getAvailableAmount()
-                + '}';
+                + super.toString() + '}';
 
     }
 
@@ -36,6 +34,10 @@ public class Stock extends Asset implements IUpdatable {
         // randomize the change in the price of the stock by the mean and std in normal distribution
         double change = new Random().nextGaussian() * getStd() + getMean();
         double newPrice = getPrice() + (getPrice() * (change / 100));
+//        insert the last price to the history of prices
+        getHistoryPrices().add(getPrice());
         setPrice(newPrice);
     }
+
+
 }

@@ -1,10 +1,11 @@
 package StockMarketProject;
-import java.util.HashMap;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.general.DefaultPieDataset;
+import org.knowm.xchart.*;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class Portfolio {
     private HashMap<String, Asset> assetsMap;
@@ -127,28 +128,18 @@ public class Portfolio {
     }
 
     public void plotPortfolioPieChart() {
-        DefaultPieDataset dataset = new DefaultPieDataset();
-
-        double totalBalanceInMarket = getBalanceInMarket();
-
+//        make pie chart with XChart
+        PieChart chart = new PieChartBuilder().width(800).height(600).title("Portfolio").build();
         for (String assetName : assetsMap.keySet()) {
             int amount = amountMap.get(assetName);
             double assetPrice = assetsMap.get(assetName).getPrice();
-            double assetBalancePercentage = (amount * assetPrice) / totalBalanceInMarket * 100.0;
-            dataset.setValue(assetName, assetBalancePercentage);
+            double assetBalancePercentage = (amount * assetPrice) / getBalanceInMarket() * 100.0;
+            chart.addSeries(assetName, assetBalancePercentage);
         }
-
-        JFreeChart chart = ChartFactory.createPieChart(
-                "Portfolio Overview", // Chart title
-                dataset, // Dataset
-                true, // Include legend
-                true, // Include tooltips
-                false // Include URLs
+        JFrame frame = new SwingWrapper(chart).displayChart();
+        javax.swing.SwingUtilities.invokeLater(
+                ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
         );
-
-        ChartFrame frame = new ChartFrame("Portfolio Chart", chart);
-        frame.pack();
-        frame.setVisible(true);
     }
 
     public String toString(String mode){
@@ -189,5 +180,27 @@ public class Portfolio {
         }
 
         return str;
+    }
+
+    public void plotPortfolioBarChart(){
+        CategoryChart chart = new CategoryChartBuilder().width(800).height(600).title("Portfolio").xAxisTitle("Asset").yAxisTitle("Value").build();
+        List<String> assetNames = new ArrayList<>();
+        List<Double> assetValues = new ArrayList<>();
+        for (String assetName : assetsMap.keySet()) {
+            int amount = amountMap.get(assetName);
+            double assetPrice = assetsMap.get(assetName).getPrice();
+            double assetBalancePercentage = (amount * assetPrice);
+            assetNames.add(assetName);
+            assetValues.add(assetBalancePercentage);
+        }
+        chart.addSeries("Assets", assetNames, assetValues);
+        JFrame frame = new SwingWrapper(chart).displayChart();
+        javax.swing.SwingUtilities.invokeLater(
+                ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
+        );
+    }
+
+    public void printPortfolio() {
+        System.out.println(this);
     }
 }

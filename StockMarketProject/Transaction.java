@@ -5,31 +5,19 @@ import java.util.Date;
 public class Transaction {
 	private static int counter = 0;  // Static counter to generate unique IDs
 	private Integer _id;
-	private Trader _buyingTrader;
-	private Trader _sellingTrader;
+	private Trader _Trader;
 	private Asset _asset;
-	private Boolean _type;
+	private String _type;
 	private Double _price;
 	private int _amount;
 	private Date _date;
 
-    public Transaction() {
-        this._id = 0;
-        this._buyingTrader = null;
-        this._sellingTrader = null;
-        this._asset = null;
-        this._type = false;
-        this._price = 0.0;
-        this._amount = 0;
-        this._date = null;
-    }
     
     public Transaction(Trader sellingTrader, Asset asset, String type, Double price, int amount, Date date) {
         this._id = generateID();
-        this._sellingTrader = sellingTrader;
-        this._buyingTrader = null;  // You can set the buying trader later if needed
+        this._Trader = sellingTrader;
         this._asset = asset;
-        this._type = type.equalsIgnoreCase("sell");
+        this._type = type;
         this._price = price;
         this._amount = amount;
         this._date = date;
@@ -42,10 +30,6 @@ public class Transaction {
     public Double getPrice() {
         return this._price;
     }
-    
-    public void setBuyingTrader(Trader buyingTrader) {
-        this._buyingTrader = buyingTrader;
-    }
 
     // Method to generate a unique ID
     private static int generateID() {
@@ -54,9 +38,33 @@ public class Transaction {
     
     // @Override
     public String toString() {
-        return "ID: " + this._id + " Buying Trader: " + this._buyingTrader.getUsername()
-                + " Selling Trader: " + this._sellingTrader.getUsername() + "\n"
-                + this._asset.toString() + " Type: " + (this._type ? "Sell" : "Buy") + " Price: "
-                + this._amount + " " + this._price + " " + this._date.toString();
+        return "Transaction{" + "ID=" + _id
+                + ", Trader=" + _Trader
+                + ", Asset=" + _asset
+                + ", Type=" + _type
+                + ", Price=" + _price
+                + ", Amount=" + _amount
+                + ", Date=" + _date
+                + '}';
+    }
+
+    public Trader getTrader() {
+        return _Trader;
+    }
+
+    public boolean Try(){
+        if (_type == "Buy"){
+            return _Trader.buyAssetLimit(_asset, _amount, _price, true, this);
+    }
+        else if (_type == "Sell"){
+            return _Trader.sellAsset(_asset, _amount, _price, "limit", true, this);
+        }
+        else{
+            return false;
+        }
+    }
+
+    public void setAmount(int i) {
+        this._amount = i;
     }
 }

@@ -1,7 +1,22 @@
 package StockMarketProject;
+import org.knowm.xchart.*;
 
-
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import org.knowm.xchart.style.*;
+import org.knowm.xchart.style.colors.*;
+
+import javax.swing.*;
+
+// window listener
+class WindowListener extends WindowAdapter {
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        System.exit(0);
+    }
+}
 
 public abstract class Asset implements IUpdatable {
 
@@ -55,6 +70,10 @@ public abstract class Asset implements IUpdatable {
 
     public void setPrice(double price) {
         this._price = price;
+    }
+
+    public ArrayList<Double> getHistoryPrices() {
+        return _historyPrices;
     }
 
     public void updateAvailableAmount(int availableAmount) {
@@ -117,12 +136,6 @@ public abstract class Asset implements IUpdatable {
         this._historyPrices.add(price);
     }
 
-    public void plotHistory() {
-        for (int i = 0; i < this._historyPrices.size(); i++) {
-            System.out.println(this._historyPrices.get(i));
-        }
-    }
-
     //sort the sellers queue by price
     public void sortSellers() {
         for (int i = 0; i < this._sellers.size(); i++) {
@@ -150,10 +163,42 @@ public abstract class Asset implements IUpdatable {
     }
 
     public void plot() {
-//        To Do - plot the graph
+//        make LineChart with the history of the asset, from  xchart
+        XYChart chart = new XYChartBuilder()
+                .width(800)
+                .height(600)
+                .title("Stock Price History")
+                .xAxisTitle("Time")
+                .yAxisTitle("Price")
+                .build();
+
+        // Customize Chart
+        chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line)
+                .setMarkerSize(4)
+                .setChartTitleVisible(true)
+                .setLegendPosition(Styler.LegendPosition.InsideNW)
+                .setChartTitleVisible(true)
+                .setChartTitlePadding(15)
+                .setPlotBackgroundColor(XChartSeriesColors.BLACK)
+                .setPlotBorderColor(XChartSeriesColors.GREEN);
+
+        // Create Series
+        XYSeries series = chart.addSeries( this.getSymbol() + "Stock Price", null, this._historyPrices);
+
+        // Customize Series
+        series.setLineColor(XChartSeriesColors.GREEN);
+
+        JFrame frame = new SwingWrapper(chart).displayChart();
+        javax.swing.SwingUtilities.invokeLater(
+                ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
+        );
     }
 
     public void update() {
+    }
+
+    public String toString() {
+        return "Symbol: " + this._symbol + ", Price: " + this._price + ", Available Amount: " + this._availableAmount;
     }
 
 
@@ -167,3 +212,5 @@ public abstract class Asset implements IUpdatable {
 //    }
 
 }
+
+

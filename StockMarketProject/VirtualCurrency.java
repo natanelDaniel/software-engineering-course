@@ -21,16 +21,17 @@ public class VirtualCurrency extends Asset implements IUpdatable{
         @Override
         public String toString() {
             return "VirtualCurrency{" + "currencyName=" + currencyName
-                    + ", symbol=" + getSymbol()
-                    + ", price=" + getPrice()
-                    + ", availableAmount=" + getAvailableAmount()
-                    + '}';
+                    + super.toString() + '}';
         }
 
         @Override
         public void update() {
+//            random normal distribution
+
             double change = new Random().nextGaussian() * getStd() + getMean();
-            double newPrice = getPrice() + (getPrice() * (change / 100));
+            double noise = new Random().nextGaussian() * 0.1;
+            double newPrice = getPrice() + (getPrice() * (change / 100)) + noise;
+            getHistoryPrices().add(getPrice());
             setPrice(newPrice);
         }
 }
