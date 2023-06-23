@@ -1,8 +1,10 @@
 package StockMarketProject;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class StockMarket {
     private ArrayList<Asset> assets;
@@ -19,23 +21,74 @@ public class StockMarket {
         this.assets = new ArrayList<Asset>();
         this.traders = new ArrayList<Trader>();
         this.balance = 0;
+        this.managementPrice = 0.01;
+        this.profitForTax = 0.25;
     }
 
     public void addTrader(Trader trader) {
+        if (traders.contains(trader)) {
+            System.out.println("Trader already exists");
+            return;
+        }
         traders.add(trader);
     }
+
     public void removeTrader(Trader trader) {
+        if (!traders.contains(trader)) {
+            System.out.println("Trader doesn't exist");
+            return;
+        }
         traders.remove(trader);
     }
+
     public ArrayList<Trader> getTraders() {
         return this.traders;
     }
-    public void addAsset(Asset asset) {
-        assets.add(asset);
+
+    public void addAsset(Scanner scanner) {
+        System.out.println("Please enter the symbol of the asset you want to add:");
+        String symbol = scanner.nextLine();
+        Asset asset = searchAsset(symbol);
+        if (assets.contains(scanner)) {
+            System.out.println("Asset already exists");
+            return;
+        } else {
+            System.out.println("Please enter the price of the asset:");
+            double price = scanner.nextDouble();
+            System.out.println("Please enter the mean of the asset:");
+            double mean = scanner.nextDouble();
+            System.out.println("Please enter the std of the asset:");
+            double std = scanner.nextDouble();
+            System.out.println("Please enter the available amount of the asset:");
+            int availableAmount = scanner.nextInt();
+            System.out.println("Is the asset a stock or a currency?");
+            String type = scanner.nextLine();
+            if (type.equals("stock")) {
+                System.out.println("Please enter the company name of the asset:");
+                String companyName = scanner.nextLine();
+                asset = new Stock(symbol, price, mean, std, availableAmount, companyName);
+            } else if (type.equals("currency")) {
+                System.out.println("Please enter the currency name of the asset:");
+                String currencyName = scanner.nextLine();
+                asset = new VirtualCurrency(symbol, price, mean, std, availableAmount, currencyName);
+            } else {
+                System.out.println("Invalid input");
+                return;
+            }
+        }
     }
-    public void removeAsset(Asset asset) {
+
+    public void removeAsset(Scanner scanner) {
+        System.out.println("Please enter the symbol of the asset you want to remove:");
+        String symbol = scanner.nextLine();
+        Asset asset = searchAsset(symbol);
+        if (!assets.contains(asset)) {
+            System.out.println("Asset doesn't exist");
+            return;
+        }
         assets.remove(asset);
     }
+
     public ArrayList<Asset> getAssets() {
         return this.assets;
     }
@@ -47,6 +100,7 @@ public class StockMarket {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+
     public void updateBalance(double amount) {
         setBalance(getBalance() + amount);
     }
@@ -79,13 +133,13 @@ public class StockMarket {
             choice = scanner.nextLine();
         }
     }
+
     public void signUp(Scanner scanner) {
         System.out.println("Please enter your username:");
         String username = scanner.nextLine();
         System.out.println("Please enter your password:");
         String password = scanner.nextLine();
-        while (! VerifyPassword(password))
-        {
+        while (!VerifyPassword(password)) {
             System.out.println("Invalid password, password must contain at least 8 characters, " +
                     " at least one digit, at least one lower case letter, at least one upper case " +
                     " letter and at least one special character");
@@ -96,7 +150,7 @@ public class StockMarket {
 
         Trader trader = new Trader(username, password, managementPrice, profitForTax, this);
         addTrader(trader);
-        if (username.equals("admin")) {
+        if (username.toLowerCase().equals("admin")) {
             adminMenu(scanner, trader);
         } else {
             traderMenu(scanner, trader);
@@ -126,7 +180,7 @@ public class StockMarket {
     private void adminMenu(Scanner scanner, Trader trader) {
         System.out.println("Welcome admin!");
         System.out.println("Please choose one of the following options:");
-        System.out.println("1. Update prices");
+        System.out.println("1. Update prices"); // delete
         System.out.println("2. Take management fee");
         System.out.println("3. search for a trader");
         System.out.println("4. search for an asset");
@@ -136,13 +190,14 @@ public class StockMarket {
         System.out.println("8. Sort assets by name");
         System.out.println("9. Sort assets by price");
         System.out.println("10. Sort assets by amount");
+//        add sort for Trader
         System.out.println("11. Load assets from file");
         System.out.println("12. Sign out");
         String choice = scanner.nextLine();
-        while (!choice.equals("12")){
+        while (!choice.equals("12")) {
             switch (choice) {
                 case "1":
-                    updatePrices();
+                    updatePrices(); // delete
                     break;
                 case "2":
                     takeManagementPrice();
@@ -219,7 +274,7 @@ public class StockMarket {
         System.out.println("9. Remove account");
         System.out.println("10. Sign out");
         String choice = scanner.nextLine();
-        while (!choice.equals("10")){
+        while (!choice.equals("10")) {
             switch (choice) {
                 case "1":
                     searchForAsset(scanner);
@@ -304,6 +359,46 @@ public class StockMarket {
         trader.deposit(amount);
     }
 
+    private boolean sellAsset(Scanner scanner, Trader trader) {
+        System.out.println("Please enter the Symbol of the asset you want to sell:");
+        String symbol = scanner.nextLine();
+        if (searchAsset(symbol) == null) {
+            System.out.println("Asset not found");
+            return false;
+        } else {
+            System.out.println("Please enter the mode of sale:");
+            System.out.println("1. Market");
+            System.out.println("2. Limit");
+
+            String mode = scanner.nextLine();
+            while (!mode.equals("1") && !mode.equals("2")) {
+                System.out.println("Invalid input");
+                System.out.println("Please enter the mode of sale:");
+                System.out.println("1. Market");
+                System.out.println("2. Limit");
+                mode = scanner.nextLine();
+            }
+            if (mode.equals("1")) {
+                System.out.println("Please enter the Total amount you want to sell:");
+                int amount = scanner.nextInt();
+                scanner.nextLine();
+                Asset asset = searchAsset(symbol);
+                trader.sellAsset(asset, amount, asset.getPrice(), "market");
+                return true;
+            } else {
+                System.out.println("Please enter the amount you want to sell:");
+                int amount = scanner.nextInt();
+                scanner.nextLine();
+                System.out.println("Please enter the limit price:");
+                double limitPrice = scanner.nextDouble();
+                scanner.nextLine();
+                Asset asset = searchAsset(symbol);
+                trader.sellAsset(asset, amount, limitPrice, "limit");
+                return true;
+            }
+        }
+    }
+
     private void plotAsset(Scanner scanner) {
         System.out.println("Please enter the name of the asset you want to plot:");
         String name = scanner.nextLine();
@@ -333,6 +428,33 @@ public class StockMarket {
             }
         }
         return null;
+    }
+
+    private void sortAssetsByPrice() {
+        Collections.sort(assets, new Comparator<Asset>() {
+            @Override
+            public int compare(Asset o1, Asset o2) {
+                return Double.compare(o1.getPrice(), o2.getPrice());
+            }
+        });
+    }
+
+    private void sortAssetsByName() {
+        Collections.sort(assets, new Comparator<Asset>() {
+            @Override
+            public int compare(Asset o1, Asset o2) {
+                return o1.getSymbol().compareTo(o2.getSymbol());
+            }
+        });
+    }
+
+    private void sortAssetsByAmount() {
+        Collections.sort(assets, new Comparator<Asset>() {
+            @Override
+            public int compare(Asset o1, Asset o2) {
+                return Integer.compare(o1.getAvailableAmount(), o2.getAvailableAmount());
+            }
+        });
     }
 
     private void withdrawMoney(Scanner scanner, Trader trader) {
@@ -369,7 +491,7 @@ public class StockMarket {
         }
     }
 
-    public void signIn(Scanner scanner){
+    public void signIn(Scanner scanner) {
         System.out.println("Please enter your username:");
         String username = scanner.nextLine();
         System.out.println("Please enter your password:");
@@ -398,8 +520,11 @@ public class StockMarket {
     }
 
     public void updatePrices() {
-        // TODO implement here
+        for (Asset asset : assets) {
+            asset.update();
+        }
     }
+
     public void takeManagementPrice() {
         for (Trader trader : traders) {
             this.balance += trader.getManagementPrice();
@@ -407,6 +532,26 @@ public class StockMarket {
     }
 
     public void LoadAssetsFromFile(String filePath) {
-//        TODO: read from file
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line = reader.readLine();
+            while (line != null) {
+                String[] assetInfo = line.split(",");
+                String symbol = assetInfo[0];
+                String name = assetInfo[1];
+                double price = Double.parseDouble(assetInfo[2]);
+                double mean = Double.parseDouble(assetInfo[3]);
+                double std = Double.parseDouble(assetInfo[4]);
+                int amount = Integer.parseInt(assetInfo[5]);
+                String type = assetInfo[6];
+                if (type.equals("Stock")) {
+                    assets.add(new Stock(symbol, price, mean, std, amount, name));
+                } else if (type.equals("Currency")) {
+                    assets.add(new VirtualCurrency(symbol, price, mean, std, amount, name));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

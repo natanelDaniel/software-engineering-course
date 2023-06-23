@@ -3,7 +3,7 @@ package StockMarketProject;
 
 import java.util.ArrayList;
 
-public abstract class Asset {
+public abstract class Asset implements IUpdatable {
 
     private String _symbol;
     private double _price;
@@ -31,6 +31,14 @@ public abstract class Asset {
 
     public double getPrice() {
         return _price;
+    }
+
+    public double getMean() {
+        return _mean;
+    }
+
+    public double getStd() {
+        return _std;
     }
 
     public int getAvailableAmount() {
@@ -70,14 +78,14 @@ public abstract class Asset {
         this._buyers.add(transaction);
     }
 
-//    public void removeByIdBuyers(String id) {
-//        Transaction transaction = this.containsByIdBuyers(id);
-//        if (transaction == null) {
-//            System.out.println("Not in queue - cannot remove");
-//            return;
-//        }
-//        this._buyers.remove(transaction);
-//    }
+    public void removeByIdBuyers(String id) {
+        Transaction transaction = this.containsByIdBuyers(id);
+        if (transaction == null) {
+            System.out.println("Not in queue - cannot remove");
+            return;
+        }
+        this._buyers.remove(transaction);
+    }
 
     public Transaction containsByIdSellers(String id) {
         for (Transaction transaction : this._sellers) {
@@ -96,14 +104,14 @@ public abstract class Asset {
         this._sellers.add(transaction);
     }
 
-//    public void removeByIdSellers(String id) {
-//        Transaction transaction = this.containsByIdSellers(id);
-//        if (transaction == null) {
-//            System.out.println("Not in queue - cannot remove");
-//            return;
-//        }
-//        this._sellers.remove(transaction);
-//    }
+    public void removeByIdSellers(String id) {
+        Transaction transaction = this.containsByIdSellers(id);
+        if (transaction == null) {
+            System.out.println("Not in queue - cannot remove");
+            return;
+        }
+        this._sellers.remove(transaction);
+    }
 
     public void addPriceToHistory(double price) {
         this._historyPrices.add(price);
@@ -143,6 +151,9 @@ public abstract class Asset {
 
     public void plot() {
 //        To Do - plot the graph
+    }
+
+    public void update() {
     }
 
 
