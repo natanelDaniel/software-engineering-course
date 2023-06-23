@@ -180,7 +180,7 @@ public class StockMarket {
     private void adminMenu(Scanner scanner, Trader trader) {
         System.out.println("Welcome admin!");
         System.out.println("Please choose one of the following options:");
-        System.out.println("1. Update prices"); // delete
+        System.out.println("1. Load assets from file");
         System.out.println("2. Take management fee");
         System.out.println("3. search for a trader");
         System.out.println("4. search for an asset");
@@ -190,14 +190,14 @@ public class StockMarket {
         System.out.println("8. Sort assets by name");
         System.out.println("9. Sort assets by price");
         System.out.println("10. Sort assets by amount");
-//        add sort for Trader
-        System.out.println("11. Load assets from file");
-        System.out.println("12. Sign out");
+        System.out.println("11. Sign out");
         String choice = scanner.nextLine();
-        while (!choice.equals("12")) {
+        while (!choice.equals("11")) {
             switch (choice) {
                 case "1":
-                    updatePrices(); // delete
+                    System.out.println("Please enter the file path:");
+                    String filePath = scanner.nextLine();
+                    LoadAssetsFromFile(filePath);
                     break;
                 case "2":
                     takeManagementPrice();
@@ -225,11 +225,6 @@ public class StockMarket {
                     break;
                 case "10":
                     sortAssetsByAmount();
-                    break;
-                case "11":
-                    System.out.println("Please enter the file path:");
-                    String filePath = scanner.nextLine();
-                    LoadAssetsFromFile(filePath);
                     break;
                 default:
                     System.out.println("Invalid input");
