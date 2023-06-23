@@ -1,4 +1,4 @@
-package StockMarketProject;
+package StockMarketProjectCopy;
 import org.knowm.xchart.*;
 
 import javax.swing.*;
@@ -137,7 +137,7 @@ public class Portfolio {
             chart.addSeries(assetName, assetBalancePercentage);
         }
         JFrame frame = new SwingWrapper(chart).displayChart();
-        javax.swing.SwingUtilities.invokeLater(
+        SwingUtilities.invokeLater(
                 ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
         );
     }
@@ -195,7 +195,7 @@ public class Portfolio {
         }
         chart.addSeries("Assets", assetNames, assetValues);
         JFrame frame = new SwingWrapper(chart).displayChart();
-        javax.swing.SwingUtilities.invokeLater(
+        SwingUtilities.invokeLater(
                 ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
         );
     }

@@ -1,4 +1,4 @@
-package StockMarketProject;
+package StockMarketProjectCopy;
 import org.knowm.xchart.*;
 
 import java.awt.event.WindowAdapter;
@@ -189,7 +189,7 @@ public abstract class Asset implements IUpdatable {
         series.setLineColor(XChartSeriesColors.GREEN);
 
         JFrame frame = new SwingWrapper(chart).displayChart();
-        javax.swing.SwingUtilities.invokeLater(
+        SwingUtilities.invokeLater(
                 ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
         );
     }

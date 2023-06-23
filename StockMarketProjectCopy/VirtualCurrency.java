@@ -1,4 +1,4 @@
-package StockMarketProject;
+package StockMarketProjectCopy;
 
 import java.util.Random;
 

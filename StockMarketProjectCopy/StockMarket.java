@@ -1,4 +1,4 @@
-package StockMarketProject;
+package StockMarketProjectCopy;
 
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -242,7 +242,7 @@ public class StockMarket extends Thread{
         }
         chart.addSeries("Assets", assetNames, assetValues);
         JFrame frame = new SwingWrapper(chart).displayChart();
-        javax.swing.SwingUtilities.invokeLater(
+        SwingUtilities.invokeLater(
                 ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
         );
     }
@@ -263,7 +263,7 @@ public class StockMarket extends Thread{
         }
         chart.addSeries("Traders", traderNames, traderValues);
         JFrame frame = new SwingWrapper(chart).displayChart();
-        javax.swing.SwingUtilities.invokeLater(
+        SwingUtilities.invokeLater(
                 ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
         );
     }
@@ -279,7 +279,7 @@ public class StockMarket extends Thread{
         }
         chart.addSeries("Traders", traderNames, traderValues);
         JFrame frame = new SwingWrapper(chart).displayChart();
-        javax.swing.SwingUtilities.invokeLater(
+        SwingUtilities.invokeLater(
                 ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
         );
     }
@@ -717,7 +717,7 @@ public class StockMarket extends Thread{
         CategoryChart chart = new CategoryChartBuilder().width(800).height(600).title("Portfolio").xAxisTitle("Asset").yAxisTitle("Value").build();
         chart.addSeries("Assets", names, prices);
         JFrame frame = new SwingWrapper(chart).displayChart();
-        javax.swing.SwingUtilities.invokeLater(
+        SwingUtilities.invokeLater(
                 ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
         );
 
