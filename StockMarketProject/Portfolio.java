@@ -1,4 +1,4 @@
-package StockMarketProjectCopy;
+package StockMarketProject;
 import org.knowm.xchart.*;
 
 import javax.swing.*;

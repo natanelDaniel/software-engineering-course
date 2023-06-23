@@ -1,4 +1,4 @@
-package StockMarketProjectCopy;
+package StockMarketProject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,9 +8,9 @@ public class Main {
 
         public static void main(String[] args) {
             StockMarket stockMarket = new StockMarket();
-            String AssetsPath = "StockMarketProjectCopy\\Tests\\assets.txt";
+            String AssetsPath = "StockMarketProject\\Tests\\assets.txt";
             stockMarket.LoadAssetsFromFile(AssetsPath);
-            String TradersPath = "StockMarketProjectCopy\\Tests\\traders.txt";
+            String TradersPath = "StockMarketProject\\Tests\\traders.txt";
             stockMarket.LoadTradersFromFile(TradersPath);
 
             String test1 = "StockMarketProject\\Tests\\StockMarketTest.txt";
