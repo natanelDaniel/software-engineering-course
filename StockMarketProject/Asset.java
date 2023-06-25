@@ -27,6 +27,8 @@ public abstract class Asset implements IUpdatable {
     private ArrayList<Double> _historyPrices;
     private ArrayList<Transaction> _sellers;
     private ArrayList<Transaction> _buyers;
+
+    private ArrayList<Trader> owners;
     private int _availableAmount;
 
     public Asset(String symbol, double price, double mean, double std, int availableAmount) {
@@ -38,6 +40,7 @@ public abstract class Asset implements IUpdatable {
         this._historyPrices = new ArrayList<Double>();
         this._sellers = new ArrayList<Transaction>();
         this._buyers = new ArrayList<Transaction>();
+        this.owners = new ArrayList<Trader>();
     }
 
     public String getSymbol() {
@@ -58,6 +61,10 @@ public abstract class Asset implements IUpdatable {
 
     public int getAvailableAmount() {
         return _availableAmount;
+    }
+
+    public ArrayList<Trader> getOwners() {
+        return owners;
     }
 
     public ArrayList<Transaction> getSellers() {
@@ -199,6 +206,20 @@ public abstract class Asset implements IUpdatable {
 
     public String toString() {
         return "Symbol: " + this._symbol + ", Price: " + this._price + ", Available Amount: " + this._availableAmount;
+    }
+
+    public void addTrader(Trader trader) {
+//        check if trader already owns this asset
+        for (Trader t : this.owners) {
+            if (t.equals(trader)) {
+                return;
+            }
+        }
+        this.owners.add(trader);
+    }
+
+    public void removeTrader(Trader trader) {
+        this.owners.remove(trader);
     }
 
 

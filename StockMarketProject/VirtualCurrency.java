@@ -33,5 +33,8 @@ public class VirtualCurrency extends Asset implements IUpdatable{
             double newPrice = getPrice() + (getPrice() * (change / 100)) + noise;
             getHistoryPrices().add(getPrice());
             setPrice(newPrice);
+            for (Trader owner : getOwners()) {
+                owner.update();
+            }
         }
 }

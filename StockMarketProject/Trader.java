@@ -1,5 +1,14 @@
 package StockMarketProject;
 
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.colors.XChartSeriesColors;
+
+import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Trader {
@@ -9,6 +18,8 @@ public class Trader {
     private double managementPrice;
     private double balance;
     private double profitForTax;
+
+    private ArrayList<Double> balanceHistory;
 
     private StockMarket stockMarket;
 
@@ -24,6 +35,7 @@ public class Trader {
         this.balance = 0;
         this.profitForTax = profitForTax;
         this.stockMarket = stockMarket;
+        this.balanceHistory = new ArrayList<Double>();
 
     }
 
@@ -135,7 +147,7 @@ public class Trader {
             this.balance -= availableAmount * asset.getPrice() * (1  + this.getFee());
             portfolio.addAsset(asset, availableAmount, asset.getPrice());
             asset.updateAvailableAmount(0);
-
+            asset.addTrader(this);
             stockMarket.updateBalance(availableAmount * asset.getPrice() * (1  + this.getFee()));
 
             if (! fromTransaction) {
@@ -153,7 +165,7 @@ public class Trader {
         portfolio.addAsset(asset, amount, asset.getPrice());
 
         asset.updateAvailableAmount(availableAmount - amount);
-
+        asset.addTrader(this);
         stockMarket.updateBalance(amount * asset.getPrice() * (1  + this.getFee()));
         if (! fromTransaction) {
             System.out.println("The Transaction was successful");
@@ -193,6 +205,9 @@ public class Trader {
 
             balance += amount * asset.getPrice()  * (1  - this.getFee());
             portfolio.removeAsset(asset, amount, asset.getPrice());
+            if (portfolio.getAssetAmount(asset) == 0) {
+                asset.removeTrader(this);
+            }
             asset.updateAvailableAmount(asset.getAvailableAmount() + amount);
 
             stockMarket.updateBalance(- amount * asset.getPrice() * (1  - this.getFee()));
@@ -216,7 +231,9 @@ public class Trader {
             balance += amount * asset.getPrice() * (1 - this.getFee());
             portfolio.removeAsset(asset, amount, asset.getPrice());
             asset.updateAvailableAmount(asset.getAvailableAmount() + amount);
-
+            if (portfolio.getAssetAmount(asset) == 0) {
+                asset.removeTrader(this);
+            }
             stockMarket.updateBalance(-amount * asset.getPrice() * (1 - this.getFee()));
 
 //            Tax part
@@ -276,7 +293,7 @@ public class Trader {
             System.out.println("This asset is not traded in the market");
             return;
         }
-        if (amount * asset.getPrice() * (1 + this.getFee()) > balance) {
+        if (amount * asset.getPrice() * (1 + this.getFee()) >= balance) {
             System.out.println("You don't have enough money to buy this asset");
             return;
         }
@@ -289,7 +306,7 @@ public class Trader {
             this.balance -= availableAmount * asset.getPrice() * (1  + this.getFee());
             portfolio.addAsset(asset, availableAmount, asset.getPrice());
             asset.updateAvailableAmount(0);
-
+            asset.addTrader(this);
             stockMarket.updateBalance(availableAmount * asset.getPrice() * (1  + this.getFee()));
 
             System.out.println("There are not enough assets in the market");
@@ -302,7 +319,7 @@ public class Trader {
             portfolio.addAsset(asset, amount, asset.getPrice());
 
             asset.updateAvailableAmount(availableAmount - amount);
-
+            asset.addTrader(this);
             stockMarket.updateBalance(amount * asset.getPrice() * (1  + this.getFee()));
             System.out.println("You bought " + amount + " of " + asset.getSymbol());
             System.out.println("You paid " + amount * asset.getPrice() * (1  + this.getFee()) + " for this transaction");
@@ -316,5 +333,39 @@ public class Trader {
 
     public void printPortfolio() {
         System.out.println(this.getPortfolio().toString());
+    }
+
+    public void update() {
+        balanceHistory.add(this.getBalance() + this.getBalanceInMarket());
+    }
+
+    public void plotBalanceHistory(){
+        //        make LineChart with the history of the asset, from  xchart
+        XYChart chart = new XYChartBuilder()
+                .width(800)
+                .height(600)
+                .title("Stock Price History")
+                .xAxisTitle("Time")
+                .yAxisTitle("Price")
+                .build();
+
+        // Customize Chart
+        chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line)
+                .setMarkerSize(4)
+                .setChartTitleVisible(true)
+                .setLegendPosition(Styler.LegendPosition.InsideNW)
+                .setChartTitleVisible(true)
+                .setChartTitlePadding(15)
+                .setPlotBackgroundColor(XChartSeriesColors.BLACK)
+                .setPlotBorderColor(XChartSeriesColors.GREEN);
+
+        // Create Series
+
+        XYSeries series = chart.addSeries("Balance", null, balanceHistory);
+
+        JFrame frame = new SwingWrapper(chart).displayChart();
+        SwingUtilities.invokeLater(
+                ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
+        );
     }
 }

@@ -37,6 +37,11 @@ public class Stock extends Asset implements IUpdatable {
 //        insert the last price to the history of prices
         getHistoryPrices().add(getPrice());
         setPrice(newPrice);
+        if (this.getOwners().size() > 0) {
+            for (Trader owner : getOwners()) {
+                owner.update();
+            }
+        }
     }
 
 

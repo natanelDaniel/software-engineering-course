@@ -372,13 +372,15 @@ public class StockMarket extends Thread{
         System.out.println("9. Withdraw money");
         System.out.println("10. Remove account");
         System.out.println("11. plot Assets by price");
-        System.out.println("12. Sign out");
+        System.out.println("12. print 5 random assets");
+        System.out.println("13. plot balance in market History");
+        System.out.println("14. Sign out");
     }
     public void traderMenu(Scanner scanner, Trader trader) {
         System.out.println("Welcome " + trader.getUsername() + "!");
         printTraderManu();
         String choice = scanner.nextLine();
-        while (!choice.equals("12")) {
+        while (!choice.equals("14")) {
             switch (choice) {
                 case "1":
                     searchForAsset(scanner);
@@ -446,6 +448,12 @@ public class StockMarket extends Thread{
                     break;
                 case "11":
                     plotAssetsByPrice();
+                    break;
+                case "12":
+                    print5RandomAssets();
+                    break;
+                case "13":
+                    trader.plotBalanceHistory();
                     break;
                 default:
                     System.out.println("Invalid input");
@@ -731,5 +739,11 @@ public class StockMarket extends Thread{
         return this.managementPrice;
     }
 
-
+    private void print5RandomAssets() {
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            int index = random.nextInt(assets.size());
+            System.out.println(assets.get(index));
+        }
+    }
 }

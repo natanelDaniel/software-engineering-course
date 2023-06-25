@@ -1,5 +1,7 @@
 package StockMarketProject;
 import org.knowm.xchart.*;
+import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.colors.XChartSeriesColors;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -142,24 +144,16 @@ public class Portfolio {
         );
     }
 
-    public String toString(String mode){
+    public String toString(){
         String str = "Portfolio:\n";
-        str += "Total balance in market: " + getBalanceInMarket() + "\n";
-        str += "Total Earnings: " + getTotalEarnings() + "\n";
-        str += "Total Earnings Percentage: " + getTotalEarningsPercentage() + "\n";
+        str += "Total balance in market [$]: " + Math.round(getBalanceInMarket() * 100.0) / 100.0 + "\n";
+        str += "Total Earnings [$]: " + Math.round(getTotalEarnings() * 100.0) / 100.0 + "\n";
+        str += "Total Earnings Percentage [$]: " + Math.round(getTotalEarningsPercentage() * 100.0) / 100.0 + "%\n";
         str += "Asset\t\tValue\t\t";
-        if(mode.equals("DifferenceFromBuying")){
-            str += "DifferenceFromBuying\n";
-        }
-        else if(mode.equals("Amount")){
-            str += "Amount\n";
-        }
-        else if(mode.equals("TotalEarnings")){
-            str += "TotalEarnings\n";
-        }
-        else{
-            throw new IllegalArgumentException("Invalid mode");
-        }
+        str += "DifferenceFromBuying [%]\t\t";
+        str += "Amount\t\t";
+        str += "TotalEarnings [$]\n";
+        str += "--------------------------------------------------\n";
         for (String assetName : assetsMap.keySet()) {
             int amount = amountMap.get(assetName);
             double assetPrice = assetsMap.get(assetName).getPrice();
@@ -167,18 +161,12 @@ public class Portfolio {
             double assetBuyingPrice = totalBuyingPricePerAssetMap.get(assetName);
             double difference = assetBalancePercentage / assetBuyingPrice * 100.0 - 100.0;
             double totalEarnings = assetBalancePercentage - assetBuyingPrice;
-
-            if (mode.equals("DifferenceFromBuying")){
-                str += assetName + "\t\t" + assetBalancePercentage + "\t\t" + difference + "\n";
-            }
-            else if(mode.equals("Amount")){
-                str += assetName + "\t\t" + assetBalancePercentage + "\t\t" + amount + "\n";
-            }
-            else if(mode.equals("TotalEarnings")){
-                str += assetName + "\t\t" + assetBalancePercentage + "\t\t" + totalEarnings + "\n";
-            }
+//            round
+            assetBalancePercentage = Math.round(assetBalancePercentage * 100.0) / 100.0;
+            difference = Math.round(difference * 100.0) / 100.0;
+            totalEarnings = Math.round(totalEarnings * 100.0) / 100.0;
+            str += assetName + "\t\t" + assetBalancePercentage + "\t\t" + difference + "\t\t" + amount + "\t\t" + totalEarnings + "\n";
         }
-
         return str;
     }
 
@@ -203,4 +191,5 @@ public class Portfolio {
     public void printPortfolio() {
         System.out.println(this);
     }
+
 }
