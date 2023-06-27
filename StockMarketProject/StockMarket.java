@@ -84,7 +84,12 @@ public class StockMarket extends Thread{
                     signUp(scanner);
                     break;
                 case "2":
-                    signIn(scanner);
+                    try {
+                        signIn(scanner);
+                    }
+                    catch (IllegalStateException e) {
+                        System.out.println(e);
+                    }
                     break;
                 default:
                     System.out.println("Invalid input");
@@ -620,7 +625,7 @@ public class StockMarket extends Thread{
         Trader trader = findTrader(username, password);
 
         if (trader == null) {
-            System.out.println("Invalid username or password");
+            throw new IllegalStateException("Invalid username or password");
         } else {
             if (username.equals("admin")) {
                 adminMenu(scanner);
