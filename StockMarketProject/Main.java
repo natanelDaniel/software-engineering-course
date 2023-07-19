@@ -19,14 +19,29 @@ public class Main {
             if (fromFile) {
                 try {
                     scanner = new Scanner(new FileInputStream(test1));
-                    stockMarket.menu(scanner);
+                    try {
+                        stockMarket.menu(scanner);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                    finally {
+//                        stop the program
+                        System.exit(0);
+                    }
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             } else {
                 scanner = new Scanner(System.in);
-                stockMarket.menu(scanner);
+                try {
+                    stockMarket.menu(scanner);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                finally {
+//                        stop the program
+                    System.exit(0);
+                }
             }
-            System.out.println("Bye Bye");
         }
 }

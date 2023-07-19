@@ -114,6 +114,7 @@ public class Trader {
         if (amount * pricePerUnit  * (1  + this.getFee()) > balance) {
             if (! fromTransaction) {
                 System.out.println("You don't have enough money to buy this asset");
+                System.out.println("Try to deposit more money, option 8");
             }
             return false;
         }
@@ -200,7 +201,7 @@ public class Trader {
             return false;
         }
         if (mode.equals("market")) {
-            System.out.println("You are selling " + amount + " " + asset.getSymbol() + " for " + asset.getPrice() + " each");
+            System.out.println("You are selling " + amount + " " + asset.getSymbol() + " for " + Math.round(asset.getPrice()) + "[$] each");
             System.out.println("The Transaction was successful");
 
             balance += amount * asset.getPrice()  * (1  - this.getFee());
@@ -215,7 +216,7 @@ public class Trader {
 //            Tax part
             double tax = (asset.getPrice() - portfolio.getAveragePrice(asset) ) * amount * this.getTax();
             setProfitForTax(tax + getProfitForTax());
-            System.out.println("You are paying " + tax + " tax");
+            System.out.println("You are paying " + Math.round(tax) + " [$] tax");
             return true;
         } else if (mode.equals("limit")) {
             if (pricePerUnit > asset.getPrice()) {
@@ -227,7 +228,7 @@ public class Trader {
                 }
                 return false;
             }
-            System.out.println("You are selling " + amount + " " + asset.getSymbol() + " for " + pricePerUnit + " each");
+            System.out.println("You are selling " + amount + " " + asset.getSymbol() + " for " + Math.round(pricePerUnit) + " [$] each");
             balance += amount * asset.getPrice() * (1 - this.getFee());
             portfolio.removeAsset(asset, amount, asset.getPrice());
             asset.updateAvailableAmount(asset.getAvailableAmount() + amount);
@@ -238,7 +239,7 @@ public class Trader {
 
 //            Tax part
             double tax = (asset.getPrice() - portfolio.getAveragePrice(asset) ) * amount * this.getTax();
-            System.out.println("You are paying " + tax + " tax");
+            System.out.println("You are paying " + Math.round(tax) + "[$] tax");
             setProfitForTax(tax + getProfitForTax());
             return true;
         }
@@ -295,6 +296,7 @@ public class Trader {
         }
         if (amount * asset.getPrice() * (1 + this.getFee()) >= balance) {
             System.out.println("You don't have enough money to buy this asset");
+            System.out.println("Try to deposit more money, option 8");
             return;
         }
         Integer availableAmount = asset.getAvailableAmount();

@@ -205,7 +205,7 @@ public abstract class Asset implements IUpdatable {
     }
 
     public String toString() {
-        return "Symbol: " + this._symbol + ", Price: " + this._price + ", Available Amount: " + this._availableAmount;
+        return "Symbol: " + this._symbol + ", Price: " +  Math.round(this._price * 100.0) / 100.0 + ", Available Amount: " + this._availableAmount;
     }
 
     public void addTrader(Trader trader) {

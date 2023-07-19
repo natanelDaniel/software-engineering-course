@@ -65,6 +65,26 @@ public class StockMarket extends Thread{
         setBalance(getBalance() + amount);
     }
 
+    public void printThe5MostProfitableAssets() {
+
+        HashMap<Asset, Double> assetsProfit = new HashMap<>();
+//        loop on all the assets and put in list the current price - the first price in the history
+        for (Asset asset : assets) {
+            assetsProfit.put(asset, asset.getPrice() - asset.getHistoryPrices().get(0));
+        }
+//        sort the assets by the profit
+        List<Map.Entry<Asset, Double>> list = new ArrayList<>(assetsProfit.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        Collections.reverse(list);
+//        print the 5 most profitable assets
+        System.out.println("The 5 most profitable assets are:");
+        for (int i = 0; i < 5; i++) {
+            System.out.println(list.get(i).getKey());
+        }
+
+
+    }
+
     public void printMainMenu() {
         System.out.println("Welcome to the Stock Market!");
         System.out.println("Please choose one of the following options:");
@@ -98,6 +118,8 @@ public class StockMarket extends Thread{
             printMainMenu();
             choice = scanner.nextLine();
         }
+//        here we should stop the thread
+        throw new IllegalStateException("Bye Bye");
     }
 
     public void signUp(Scanner scanner) {
@@ -254,7 +276,6 @@ public class StockMarket extends Thread{
 
     private void sortTradersByBalance() {
         traders.sort(Comparator.comparing(Trader::getBalance));
-        printTraders();
     }
 
     private void plotTradersByBalance() {
@@ -366,34 +387,40 @@ public class StockMarket extends Thread{
 
     private void printTraderManu(Trader trader){
         // print the current amount of money in the market
-        System.out.println("Hi " + trader.getUsername() +" your current balance is: " + trader.getBalance());
+        System.out.println("Hi " + trader.getUsername() +" your current balance is: " + Math.round(trader.getBalance() * 100.0) / 100.0);
         System.out.println("Please choose one of the following options:");
-        System.out.println("1. Search for an asset");
-        System.out.println("2. Plot asset");
+        System.out.println("1. Deposit money");
+        System.out.println("2. Withdraw money");
         System.out.println("3. Buy asset");
         System.out.println("4. Sell asset");
-        System.out.println("5. Print portfolio");
-        System.out.println("6. Plot portfolio");
-        System.out.println("7. Plot portfolio Bar Chart");
-        System.out.println("8. Deposit money");
-        System.out.println("9. Withdraw money");
-        System.out.println("10. Remove account");
-        System.out.println("11. plot Assets by price");
-        System.out.println("12. print 5 random assets");
-        System.out.println("13. plot balance in market History");
-        System.out.println("14. Sign out");
+        System.out.println("5. Remove account");
+        System.out.println("6. Visualisation menu");
+        System.out.println("7. Sign out");
+    }
+
+    public void VisualisationMenu(){
+        System.out.println("Please choose one of the following options:");
+        System.out.println("1. Search for asset");
+        System.out.println("2. Plot asset");
+        System.out.println("3. Print portfolio");
+        System.out.println("4. Plot portfolio");
+        System.out.println("5. Plot portfolio Bar Chart");
+        System.out.println("6. plot Assets by price");
+        System.out.println("7. print 5 random assets");
+        System.out.println("8. plot balance in market History");
+        System.out.println("9. out");
     }
     public void traderMenu(Scanner scanner, Trader trader) {
         System.out.println("Welcome " + trader.getUsername() + "!");
         printTraderManu(trader);
         String choice = scanner.nextLine();
-        while (!choice.equals("14")) {
+        while (!choice.equals("7")) {
             switch (choice) {
                 case "1":
-                    searchForAsset(scanner);
+                    depositMoney(scanner, trader);
                     break;
                 case "2":
-                    plotAsset(scanner);
+                    withdrawMoney(scanner, trader);
                     break;
                 case "3":
                     System.out.println("Please enter the Symbol of the asset you want to buy:");
@@ -417,9 +444,14 @@ public class StockMarket extends Thread{
                         }
                         if (mode.equals("1")) {
                             System.out.println("Please enter the Total Money you want to spend:");
-                            int money = scanner.nextInt();
-                            scanner.nextLine();
-                            trader.buyAssetMarketMode(asset, money);
+                            try {
+                                int money = scanner.nextInt();
+                                scanner.nextLine();
+                                trader.buyAssetMarketMode(asset, money);
+                            } catch (InputMismatchException e) {
+                                System.out.println("Invalid input");
+                                scanner.nextLine();
+                            }
                         } else {
                             System.out.println("Please enter the amount you want to buy:");
                             int amount = scanner.nextInt();
@@ -436,37 +468,51 @@ public class StockMarket extends Thread{
                     sellAsset(scanner, trader);
                     break;
                 case "5":
-                    trader.printPortfolio();
-                    break;
-                case "6":
-                    plotPortfolio(trader);
-                    break;
-                case "7":
-                    trader.getPortfolio().plotPortfolioBarChart();
-                    break;
-                case "8":
-                    depositMoney(scanner, trader);
-                    break;
-                case "9":
-                    withdrawMoney(scanner, trader);
-                    break;
-                case "10":
                     removeAccount(scanner, trader);
                     break;
-                case "11":
-                    plotAssetsByPrice();
-                    break;
-                case "12":
-                    print5RandomAssets();
-                    break;
-                case "13":
-                    trader.plotBalanceHistory();
+                case "6":
+                    VisualisationMenu();
+                    String choice2 = scanner.nextLine();
+                    while (!choice2.equals("9")) {
+                        switch (choice2) {
+                            case "1":
+                                searchForAsset(scanner);
+                                break;
+                            case "2":
+                                plotAsset(scanner);
+                                break;
+                            case "3":
+                                trader.getPortfolio().printPortfolio();
+                                break;
+                            case "4":
+                                plotPortfolio(trader);
+                                break;
+                            case "5":
+                                trader.getPortfolio().plotPortfolioBarChart();
+                                break;
+                            case "6":
+                                plotAssetsByPrice();
+                                break;
+                            case "7":
+                                print5RandomAssets();
+                                break;
+                            case "8":
+                                trader.plotBalanceHistory();
+                                break;
+                            default:
+                                System.out.println("Invalid input");
+                                break;
+                        }
+                        VisualisationMenu();
+                        choice2 = scanner.nextLine();
+                    }
                     break;
                 default:
                     System.out.println("Invalid input");
                     break;
             }
             printTraderManu(trader);
+            printThe5MostProfitableAssets();
             choice = scanner.nextLine();
         }
     }
