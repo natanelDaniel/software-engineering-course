@@ -364,7 +364,9 @@ public class StockMarket extends Thread{
         return null;
     }
 
-    private void printTraderManu(){
+    private void printTraderManu(Trader trader){
+        // print the current amount of money in the market
+        System.out.println("Hi " + trader.getUsername() +" your current balance is: " + trader.getBalance());
         System.out.println("Please choose one of the following options:");
         System.out.println("1. Search for an asset");
         System.out.println("2. Plot asset");
@@ -383,7 +385,7 @@ public class StockMarket extends Thread{
     }
     public void traderMenu(Scanner scanner, Trader trader) {
         System.out.println("Welcome " + trader.getUsername() + "!");
-        printTraderManu();
+        printTraderManu(trader);
         String choice = scanner.nextLine();
         while (!choice.equals("14")) {
             switch (choice) {
@@ -464,7 +466,7 @@ public class StockMarket extends Thread{
                     System.out.println("Invalid input");
                     break;
             }
-            printTraderManu();
+            printTraderManu(trader);
             choice = scanner.nextLine();
         }
     }
